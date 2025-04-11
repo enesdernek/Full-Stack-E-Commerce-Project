@@ -18,9 +18,10 @@ import io.github.enesdernek.e_commerce.jwt.AuthResponse;
 import io.github.enesdernek.e_commerce.jwt.JwtService;
 import io.github.enesdernek.e_commerce.model.User;
 import io.github.enesdernek.e_commerce.repository.UserRepository;
+import io.github.enesdernek.e_commerce.service.abstracts.IUserService;
 
 @Service
-public class UserService {
+public class UserService implements IUserService{
 	
 	@Autowired
 	private UserRepository userRepository;
