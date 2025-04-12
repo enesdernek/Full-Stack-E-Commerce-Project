@@ -3,8 +3,11 @@ package io.github.enesdernek.e_commerce.model;
 import java.math.BigDecimal;
 import java.util.List;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,6 +15,8 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import jakarta.persistence.JoinColumn;
+
 
 @Entity
 @Data
@@ -46,6 +51,8 @@ public class Product {
 	@Column(name="fav_count")
 	private int favCount;
 	
-	@Column(name="image_paths")
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "imöage_paths", joinColumns = @JoinColumn(name = "product_id"))
+	@Column(name = "image_path")
 	private List<String> imagePaths;
 }
