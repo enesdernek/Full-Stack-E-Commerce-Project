@@ -52,7 +52,7 @@ public class Product {
 	private int favCount;
 	
 	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "imöage_paths", joinColumns = @JoinColumn(name = "product_id"))
+	@CollectionTable(name = "image_paths", joinColumns = @JoinColumn(name = "product_id"))
 	@Column(name = "image_path")
 	private List<String> imagePaths;
 }

@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import io.github.enesdernek.e_commerce.dto.ProductDto;
@@ -62,6 +64,93 @@ public class ProductService implements IProductService{
 		BeanUtils.copyProperties(product, productDto);
 		
 		return productDto;
+	}
+
+	@Override
+	public ProductDto updateByProductId(Long productId, ProductDtoIU productDtoIU) {
+		
+		Product productDb = this.productRepository.findById(productId).get();
+		
+		BeanUtils.copyProperties(productDtoIU, productDb);
+		
+		this.productRepository.save(productDb);
+		
+		ProductDto productDto = new ProductDto();
+		
+		BeanUtils.copyProperties(productDb, productDto);
+		
+		return productDto;
+		
+	}
+
+	@Override
+	public ProductDto getByProductId(Long productId) {
+		Product product = this.productRepository.findById(productId).get();
+		ProductDto productDto = new ProductDto();
+		BeanUtils.copyProperties(product, productDto);
+		return productDto;
+	}
+
+	@Override
+	public List<ProductDto> searchByNameOrBrandContainsPaged(String searchInput,int pageNo,int pageSize) {
+		
+		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+		
+		List<Product>filteredProducts = this.productRepository.searchByNameOrBrandContainsPaged(searchInput,pageable);
+		
+		List<ProductDto> productDtos = new ArrayList<>();
+		
+		for(Product product : filteredProducts) {
+			ProductDto productDto = new ProductDto();
+			BeanUtils.copyProperties(product, productDto);
+			productDtos.add(productDto);
+		}
+		return productDtos;
+	}
+	
+	public List<ProductDto> getAllPaged(int pageNo,int pageSize){
+		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+		List<Product> productsDb = this.productRepository.getAllPaged(pageable);
+		List<ProductDto> productDtos = new ArrayList();
+		
+		for(Product product:productsDb) {
+			ProductDto productDto = new ProductDto();
+			BeanUtils.copyProperties(product, productDto);
+			productDtos.add(productDto);
+		}
+		
+		return productDtos;
+	}
+
+	@Override
+	public List<ProductDto> getAllByPriceASCPaged(int pageNo, int pageSize) {
+		
+		Pageable pageable = PageRequest.of(pageNo-1, pageSize);
+		List<Product> products = this.productRepository.getAllByPriceASCPaged(pageable);
+		List<ProductDto> productDtos = new ArrayList<>();
+		
+		for(Product product:products) {
+			ProductDto productDto = new ProductDto();
+			BeanUtils.copyProperties(product, productDto);
+			productDtos.add(productDto);
+		}
+		
+		return productDtos;
+	}
+
+	@Override
+	public List<ProductDto> getAllByPriceDESCPaged(int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of(pageNo-1, pageSize);
+		List<Product> products = this.productRepository.getAllByPriceDESCPaged(pageable);
+		List<ProductDto> productDtos = new ArrayList<>();
+		
+		for(Product product:products) {
+			ProductDto productDto = new ProductDto();
+			BeanUtils.copyProperties(product, productDto);
+			productDtos.add(productDto);
+		}
+		
+		return productDtos;
 	}
 
 }
