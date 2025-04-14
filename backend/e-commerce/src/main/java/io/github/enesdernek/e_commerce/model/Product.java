@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 
 @Entity
@@ -55,4 +56,8 @@ public class Product {
 	@CollectionTable(name = "image_paths", joinColumns = @JoinColumn(name = "product_id"))
 	@Column(name = "image_path")
 	private List<String> imagePaths;
+	
+	@JoinColumn(name = "category_id")
+	@ManyToOne
+	private Category category;
 }
