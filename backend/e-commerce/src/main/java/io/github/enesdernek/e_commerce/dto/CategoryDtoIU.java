@@ -15,4 +15,5 @@ public class CategoryDtoIU {
 	@Size(min=2,max=64)
    private String name;
 	
+	
 }

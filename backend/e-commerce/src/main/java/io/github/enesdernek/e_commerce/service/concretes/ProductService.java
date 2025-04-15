@@ -10,10 +10,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import io.github.enesdernek.e_commerce.dto.CategoryDto;
 import io.github.enesdernek.e_commerce.dto.ProductDto;
 import io.github.enesdernek.e_commerce.dto.ProductDtoIU;
 import io.github.enesdernek.e_commerce.exception.NotFoundException;
+import io.github.enesdernek.e_commerce.model.Category;
 import io.github.enesdernek.e_commerce.model.Product;
+import io.github.enesdernek.e_commerce.repository.CategoryRepository;
 import io.github.enesdernek.e_commerce.repository.ProductRepository;
 import io.github.enesdernek.e_commerce.service.abstracts.IProductService;
 
@@ -21,7 +24,10 @@ import io.github.enesdernek.e_commerce.service.abstracts.IProductService;
 public class ProductService implements IProductService{
 	
 	@Autowired
-	public ProductRepository productRepository;
+	private ProductRepository productRepository;
+	
+	@Autowired
+	private CategoryRepository categoryRepository;
 
 	public List<ProductDto> getAll() {
 		
@@ -31,6 +37,12 @@ public class ProductService implements IProductService{
 		for(Product product:productsDb) {
 			ProductDto productDto = new ProductDto();
 			BeanUtils.copyProperties(product, productDto);
+			
+			Category category = product.getCategory();
+			CategoryDto categoryDto = new CategoryDto();
+			BeanUtils.copyProperties(category,categoryDto);
+			productDto.setCategoryDto(categoryDto);
+			
 			productDtos.add(productDto);
 		}
 		
@@ -49,6 +61,10 @@ public class ProductService implements IProductService{
 		Product product = optionalProduct.get();
 		ProductDto productDto = new ProductDto();
 		BeanUtils.copyProperties(product, productDto);
+		Category category = product.getCategory();
+		CategoryDto categoryDto = new CategoryDto();
+		BeanUtils.copyProperties(category,categoryDto);
+		productDto.setCategoryDto(categoryDto);
 		this.productRepository.deleteById(productId);
 		return productDto;
 		
@@ -57,11 +73,18 @@ public class ProductService implements IProductService{
 	@Override
 	public ProductDto add(ProductDtoIU productDtoIU) {
 		
-		Product product = new Product();	
+		Product product = new Product();
+		Category category = this.categoryRepository.findById(productDtoIU.getCategoryId()).get();
+		
 		BeanUtils.copyProperties(productDtoIU, product);
+		product.setCategory(category);
 		this.productRepository.save(product);
 		ProductDto productDto = new ProductDto();
 		BeanUtils.copyProperties(product, productDto);
+		
+		CategoryDto categoryDto = new CategoryDto();
+		BeanUtils.copyProperties(category,categoryDto);
+		productDto.setCategoryDto(categoryDto);
 		
 		return productDto;
 	}
@@ -73,11 +96,20 @@ public class ProductService implements IProductService{
 		
 		BeanUtils.copyProperties(productDtoIU, productDb);
 		
+		Category category = this.categoryRepository.findById(productDtoIU.getCategoryId()).get();
+		
+		productDb.setCategory(category);
+		
 		this.productRepository.save(productDb);
 		
 		ProductDto productDto = new ProductDto();
 		
+		CategoryDto categoryDto = new CategoryDto();
+		BeanUtils.copyProperties(category,categoryDto);
+		
 		BeanUtils.copyProperties(productDb, productDto);
+		
+		productDto.setCategoryDto(categoryDto);
 		
 		return productDto;
 		
@@ -88,6 +120,12 @@ public class ProductService implements IProductService{
 		Product product = this.productRepository.findById(productId).get();
 		ProductDto productDto = new ProductDto();
 		BeanUtils.copyProperties(product, productDto);
+		
+		Category category = product.getCategory();
+		CategoryDto categoryDto = new CategoryDto();
+		BeanUtils.copyProperties(category,categoryDto);
+		productDto.setCategoryDto(categoryDto);
+		
 		return productDto;
 	}
 
@@ -103,6 +141,12 @@ public class ProductService implements IProductService{
 		for(Product product : filteredProducts) {
 			ProductDto productDto = new ProductDto();
 			BeanUtils.copyProperties(product, productDto);
+			
+			Category category = product.getCategory();
+			CategoryDto categoryDto = new CategoryDto();
+			BeanUtils.copyProperties(category,categoryDto);
+			productDto.setCategoryDto(categoryDto);
+			
 			productDtos.add(productDto);
 		}
 		return productDtos;
@@ -116,6 +160,12 @@ public class ProductService implements IProductService{
 		for(Product product:productsDb) {
 			ProductDto productDto = new ProductDto();
 			BeanUtils.copyProperties(product, productDto);
+			
+			Category category = product.getCategory();
+			CategoryDto categoryDto = new CategoryDto();
+			BeanUtils.copyProperties(category,categoryDto);
+			productDto.setCategoryDto(categoryDto);
+			
 			productDtos.add(productDto);
 		}
 		
@@ -132,6 +182,12 @@ public class ProductService implements IProductService{
 		for(Product product:products) {
 			ProductDto productDto = new ProductDto();
 			BeanUtils.copyProperties(product, productDto);
+			
+			Category category = product.getCategory();
+			CategoryDto categoryDto = new CategoryDto();
+			BeanUtils.copyProperties(category,categoryDto);
+			productDto.setCategoryDto(categoryDto);
+			
 			productDtos.add(productDto);
 		}
 		
@@ -147,6 +203,12 @@ public class ProductService implements IProductService{
 		for(Product product:products) {
 			ProductDto productDto = new ProductDto();
 			BeanUtils.copyProperties(product, productDto);
+			
+			Category category = product.getCategory();
+			CategoryDto categoryDto = new CategoryDto();
+			BeanUtils.copyProperties(category,categoryDto);
+			productDto.setCategoryDto(categoryDto);
+			
 			productDtos.add(productDto);
 		}
 		

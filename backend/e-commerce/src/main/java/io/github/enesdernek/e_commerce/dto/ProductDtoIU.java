@@ -40,5 +40,8 @@ public class ProductDtoIU {
 	
 	
 	private List<String> imagePaths;
+	
+	
+	private Long categoryId;
 
 }

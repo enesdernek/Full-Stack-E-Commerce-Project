@@ -39,5 +39,8 @@ public class ProductDto {
 	
 	
 	private List<String> imagePaths;
+	
+	
+	private CategoryDto categoryDto;
 
 }
