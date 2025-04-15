@@ -12,4 +12,7 @@ public interface IUserService {
 	AuthResponse authenticate(UserDtoAuthIU userDtoAuthIU);
 
     UserDto register(UserDtoIU userDtoIU) throws BadRequestException;
+    
+    UserDto deleteByUserId(Long userId);
+    
 }

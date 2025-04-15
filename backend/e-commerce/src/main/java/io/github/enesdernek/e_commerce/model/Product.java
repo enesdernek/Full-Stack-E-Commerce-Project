@@ -16,48 +16,53 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="product")
+@Table(name = "product")
 public class Product {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="product_id")
+	@Column(name = "product_id")
 	private Long productId;
-	
-	@Column(name="name")
+
+	@Column(name = "name")
 	private String name;
-	
-	@Column(name="description")
+
+	@Column(name = "description")
 	private String description;
-	
-	@Column(name="discount")
+
+	@Column(name = "discount")
 	private double discount;
-	
-	@Column(name="price")
+
+	@Column(name = "price")
 	private BigDecimal price;
-	
-	@Column(name="stock_quantity")
+
+	@Column(name = "stock_quantity")
 	private int stockQuantity;
-	
-	@Column(name="brand")
-	private String brand;	
-	
-	@Column(name="fav_count")
+
+	@Column(name = "brand")
+	private String brand;
+
+	@Column(name = "fav_count")
 	private int favCount;
-	
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "image_paths", joinColumns = @JoinColumn(name = "product_id"))
 	@Column(name = "image_path")
 	private List<String> imagePaths;
-	
+
 	@JoinColumn(name = "category_id")
 	@ManyToOne
 	private Category category;
+	
+	@ManyToMany(mappedBy = "products")
+	private List<Cart> carts;
+
+    
 }

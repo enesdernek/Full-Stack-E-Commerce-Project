@@ -19,9 +19,9 @@ import io.github.enesdernek.e_commerce.jwt.JwtAuthenticationFilter;
 @EnableWebSecurity
 public class SecurityConfig {
 	
-public static final String AUTHENTICATE = "/authenticate";
+public static final String AUTHENTICATE = "/users/authenticate";
 	
-	public static final String REGISTER = "/register";
+	public static final String REGISTER = "/users/register";
 	
 	public static final String [] ALLOWED_PATHS= {
 			"/example",

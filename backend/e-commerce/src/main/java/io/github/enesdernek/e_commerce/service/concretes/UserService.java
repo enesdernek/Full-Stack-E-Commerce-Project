@@ -1,5 +1,7 @@
 package io.github.enesdernek.e_commerce.service.concretes;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.coyote.BadRequestException;
@@ -16,7 +18,9 @@ import io.github.enesdernek.e_commerce.dto.UserDtoIU;
 import io.github.enesdernek.e_commerce.exception.UsernameOrPasswordFalseException;
 import io.github.enesdernek.e_commerce.jwt.AuthResponse;
 import io.github.enesdernek.e_commerce.jwt.JwtService;
+import io.github.enesdernek.e_commerce.model.Cart;
 import io.github.enesdernek.e_commerce.model.User;
+import io.github.enesdernek.e_commerce.repository.CartRepository;
 import io.github.enesdernek.e_commerce.repository.UserRepository;
 import io.github.enesdernek.e_commerce.service.abstracts.IUserService;
 
@@ -34,6 +38,9 @@ public class UserService implements IUserService{
 	
 	@Autowired
 	private JwtService jwtService;
+	
+	@Autowired
+	private CartRepository cartRepository;
 	
 
 	public AuthResponse authenticate(UserDtoAuthIU userDtoAuthIU) {
@@ -60,8 +67,8 @@ public class UserService implements IUserService{
 		List<User>users = this.userRepository.findAll();
 		
 		for(User user: users) {
-			if(user.getUsername().equals(userDtoIU.getUsername())) {
-				throw new BadRequestException("This username already exists.");
+			if (userRepository.existsByUsername(userDtoIU.getUsername())) {
+			    throw new BadRequestException("This username already exists.");
 			}
 		}
 				
@@ -73,6 +80,13 @@ public class UserService implements IUserService{
 		
 		user.setPassword(passwordEncoder.encode(userDtoIU.getPassword()));
 		
+		Cart cart = new Cart();
+	    cart.setTotalPrice(BigDecimal.ZERO); 
+	    cart.setProducts(new ArrayList<>()); 
+
+	    cart.setUser(user); 	    
+	    user.setCart(cart); 
+		
 		User savedUser = userRepository.save(user);
 				
 		UserDto dtoUser = new UserDto();
@@ -81,6 +95,16 @@ public class UserService implements IUserService{
 		
 		return dtoUser;
 		
+	}
+
+
+	@Override
+	public UserDto deleteByUserId(Long userId) {
+		User deletedUser = this.userRepository.findById(userId).get();
+		UserDto userDto = new UserDto();
+		BeanUtils.copyProperties(deletedUser, userDto);
+		this.userRepository.deleteById(userId);
+		return userDto;
 	}
 
 }
