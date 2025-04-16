@@ -21,6 +21,7 @@ import io.github.enesdernek.e_commerce.repository.CartItemRepository;
 import io.github.enesdernek.e_commerce.repository.CartRepository;
 import io.github.enesdernek.e_commerce.repository.ProductRepository;
 import io.github.enesdernek.e_commerce.service.abstracts.ICartService;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class CartService implements ICartService{
@@ -151,6 +152,75 @@ public class CartService implements ICartService{
 	    cartDto.setTotalPrice(totalPrice);
 
 	    return cartDto;
+	}
+	
+	@Override
+	public CartDto changeItemQuantity(Long cartId, Long cartItemId,int quantity) {
+			
+		 if (quantity < 0) {
+		        throw new IllegalArgumentException("Quantity cannot be less than 0");
+		    }
+
+		    CartItem cartItem = cartItemRepository.findById(cartItemId)
+		            .orElseThrow(() -> new EntityNotFoundException("CartItem not found"));
+
+		    Cart cart = cartRepository.findById(cartId)
+		            .orElseThrow(() -> new EntityNotFoundException("Cart not found"));
+
+		    if (quantity == 0) {
+		      
+		        cart.getCartItems().removeIf(item -> item.getCartItemId().equals(cartItemId));
+		        cartItemRepository.deleteById(cartItemId);
+		        
+		    } else {
+		       
+		        cartItem.setQuantity(quantity);
+		        cartItemRepository.save(cartItem);
+		    }
+
+		    BigDecimal newTotalPrice = BigDecimal.ZERO;
+		    List<CartItem> cartItems = cart.getCartItems();
+
+		    for (CartItem item : cartItems) {
+		        BigDecimal price = item.getProduct().getPrice(); // BigDecimal
+		        BigDecimal qty = BigDecimal.valueOf(item.getQuantity());
+		        newTotalPrice = newTotalPrice.add(price.multiply(qty));
+		    }
+
+		    cart.setTotalPrice(newTotalPrice);
+		    cartRepository.save(cart);
+		    
+		    CartDto cartDto = new CartDto();
+		    BeanUtils.copyProperties(cart, cartDto);
+		    
+		    List<CartItemDto>cartItemDtos = new ArrayList<CartItemDto>();
+		    
+		    for(CartItem cartItem_ : cart.getCartItems()) {
+		    	 CartItemDto cartItemDto = new CartItemDto();
+				 BeanUtils.copyProperties(cartItem_, cartItemDto);
+				 
+				 ProductDto productDto = new ProductDto();
+				 BeanUtils.copyProperties(cartItem_.getProduct(), productDto);
+				 
+				 CategoryDto categoryDto = new CategoryDto();
+				 BeanUtils.copyProperties(cartItem_.getProduct().getCategory(), categoryDto);
+				 
+				 productDto.setCategoryDto(categoryDto);
+				    
+				 cartItemDto.setProductDto(productDto);
+				 
+				 cartItemDtos.add(cartItemDto);			 
+		    }
+		       
+		    
+		    cartDto.setCartItemDtos(cartItemDtos);
+		    
+		    UserDto userDto = new UserDto();
+		    BeanUtils.copyProperties(cart.getUser(), userDto);
+		    cartDto.setUserDto(userDto);
+		    
+		    return cartDto;
+			
 	}
 
 	

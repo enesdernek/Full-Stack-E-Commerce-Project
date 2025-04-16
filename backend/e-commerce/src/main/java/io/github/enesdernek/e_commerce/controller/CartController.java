@@ -6,11 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.github.enesdernek.e_commerce.dto.CartDto;
+import io.github.enesdernek.e_commerce.dto.CartItemDto;
 import io.github.enesdernek.e_commerce.service.concretes.CartService;
 
 @RestController
@@ -28,6 +30,11 @@ public class CartController {
 	@GetMapping("/{cartId}")
 	public ResponseEntity<CartDto>  getCartByCartId(@PathVariable Long cartId) {
 		return new ResponseEntity<CartDto>(this.cartService.getCartByCartId(cartId),HttpStatus.OK);
+	}
+	
+	@PutMapping("/change-item-quantity")
+	public ResponseEntity<CartDto> changeItemQuantity(@RequestParam Long cartId,@RequestParam Long cartItemId,@RequestParam int quantity){
+		return new ResponseEntity<CartDto>(this.cartService.changeItemQuantity(cartId, cartItemId, quantity),HttpStatus.OK);
 	}
      
 }
