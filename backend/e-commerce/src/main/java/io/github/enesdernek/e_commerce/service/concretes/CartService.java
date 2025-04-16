@@ -13,9 +13,11 @@ import io.github.enesdernek.e_commerce.dto.CartItemDto;
 import io.github.enesdernek.e_commerce.dto.CategoryDto;
 import io.github.enesdernek.e_commerce.dto.ProductDto;
 import io.github.enesdernek.e_commerce.dto.UserDto;
+import io.github.enesdernek.e_commerce.exception.NotFoundException;
 import io.github.enesdernek.e_commerce.model.Cart;
 import io.github.enesdernek.e_commerce.model.CartItem;
 import io.github.enesdernek.e_commerce.model.Product;
+import io.github.enesdernek.e_commerce.repository.CartItemRepository;
 import io.github.enesdernek.e_commerce.repository.CartRepository;
 import io.github.enesdernek.e_commerce.repository.ProductRepository;
 import io.github.enesdernek.e_commerce.service.abstracts.ICartService;
@@ -28,6 +30,9 @@ public class CartService implements ICartService{
 	
 	@Autowired
 	private ProductRepository productRepository;
+	
+	@Autowired
+	private CartItemRepository cartItemRepository;
 	
 	@Override
 	public CartDto getCartByCartId(Long cartId) {
@@ -148,6 +153,7 @@ public class CartService implements ICartService{
 	    return cartDto;
 	}
 
+	
 
 
 	
