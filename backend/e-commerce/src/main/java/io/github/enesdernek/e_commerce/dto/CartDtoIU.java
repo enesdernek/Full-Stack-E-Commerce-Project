@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class CartDtoIU {
 	
   	
-	private List<ProductDto> productDtos;
+	private List<CartItemDto> cartItemDtos;
 	
 	private UserDto userDto;
 	

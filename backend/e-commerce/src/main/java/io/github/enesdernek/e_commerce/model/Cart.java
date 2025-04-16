@@ -39,14 +39,8 @@ public class Cart {
 	@JoinColumn(name = "user_id")
 	private User user;
 	
-	@ManyToMany
-	@JoinTable(
-	    name = "cart_product", // ilişkiyi tutacak ara tablo
-	    joinColumns = @JoinColumn(name = "cart_id"), // bu sınıfın FK'si
-	    inverseJoinColumns = @JoinColumn(name = "product_id") // diğer sınıfın FK'si
-	)
-	private List<Product>products;
-	
+	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CartItem> cartItems;
 	
 
 }

@@ -82,7 +82,7 @@ public class UserService implements IUserService{
 		
 		Cart cart = new Cart();
 	    cart.setTotalPrice(BigDecimal.ZERO); 
-	    cart.setProducts(new ArrayList<>()); 
+	    cart.setCartItems(new ArrayList<>()); 
 
 	    cart.setUser(user); 	    
 	    user.setCart(cart); 

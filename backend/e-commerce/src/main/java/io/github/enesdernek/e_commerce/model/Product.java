@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 @Data
@@ -61,8 +62,7 @@ public class Product {
 	@ManyToOne
 	private Category category;
 	
-	@ManyToMany(mappedBy = "products")
-	private List<Cart> carts;
+	
 
     
 }

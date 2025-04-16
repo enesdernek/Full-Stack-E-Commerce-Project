@@ -9,10 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.github.enesdernek.e_commerce.dto.CartDto;
+import io.github.enesdernek.e_commerce.dto.CartItemDto;
 import io.github.enesdernek.e_commerce.dto.CategoryDto;
 import io.github.enesdernek.e_commerce.dto.ProductDto;
 import io.github.enesdernek.e_commerce.dto.UserDto;
 import io.github.enesdernek.e_commerce.model.Cart;
+import io.github.enesdernek.e_commerce.model.CartItem;
 import io.github.enesdernek.e_commerce.model.Product;
 import io.github.enesdernek.e_commerce.repository.CartRepository;
 import io.github.enesdernek.e_commerce.repository.ProductRepository;
@@ -35,21 +37,27 @@ public class CartService implements ICartService{
 				
 		BeanUtils.copyProperties(cart, cartDto);
 		
-		List<ProductDto>productDtos = new ArrayList<>();
+		List<CartItemDto>cartItemDtos = new ArrayList<>();
 		
 		
-		for(Product product : cart.getProducts()) {
+		for(CartItem cartItem : cart.getCartItems()) {
+			CartItemDto cartItemDto = new CartItemDto();
+			BeanUtils.copyProperties(cartItem, cartItemDto);
+			
 			ProductDto productDto = new ProductDto();
-			BeanUtils.copyProperties(product, productDto);
+			BeanUtils.copyProperties(cartItem.getProduct(), productDto);
 			
 			CategoryDto categoryDto = new CategoryDto();
-			BeanUtils.copyProperties(product.getCategory(), categoryDto);
+			BeanUtils.copyProperties(cartItem.getProduct().getCategory(), categoryDto);
+			
 			productDto.setCategoryDto(categoryDto);
 			
-			productDtos.add(productDto);
+			cartItemDto.setProductDto(productDto);
+				
+			cartItemDtos.add(cartItemDto);
 		}
 		
-		cartDto.setProductDtos(productDtos);
+		cartDto.setCartItemDtos(cartItemDtos);
 		
 		UserDto userDto = new UserDto();
 		BeanUtils.copyProperties(cart.getUser(), userDto);
@@ -59,49 +67,83 @@ public class CartService implements ICartService{
 	}
 
 	@Override
-	public CartDto addProductToCart(Long cartId, Long productId) {
+	public CartDto addProductToCart(Long cartId, Long productId,int quantity) {
 	    
 	    Product addedProduct = this.productRepository.findById(productId).orElseThrow();
 	    Cart cart = this.cartRepository.findById(cartId).orElseThrow();
 
-	    List<Product> currentProducts = cart.getProducts();
+	    List<CartItem> currentCartItems = cart.getCartItems();
 
-	    if (currentProducts == null) {
-	        currentProducts = new ArrayList<>();
+	    if (currentCartItems == null) {
+	    	currentCartItems = new ArrayList<>();
+	    }
+	    
+	    boolean itemUpdated = false;
+
+	   
+	    for (CartItem item : currentCartItems) {
+	        if (item.getProduct().getProductId().equals(productId)) {
+	            item.setQuantity(item.getQuantity() + quantity);
+	            itemUpdated = true;
+	            break;
+	        }
+	    }
+	    
+	    if (!itemUpdated) {
+	        CartItem cartItem = new CartItem();
+	        cartItem.setProduct(addedProduct);
+	        cartItem.setQuantity(quantity);
+	        cartItem.setCart(cart);
+	        currentCartItems.add(cartItem);
 	    }
 
-	    // setCart gereksiz — çünkü ManyToMany ilişkide yön Cart üzerinden ilerliyor
-	    currentProducts.add(addedProduct);
-	    cart.setProducts(currentProducts);
-
-	    BigDecimal totalPrice = currentProducts.stream()
-	            .map(Product::getPrice)
-	            .reduce(BigDecimal.ZERO, BigDecimal::add);
+	    cart.setCartItems(currentCartItems);
+	    
+	    BigDecimal totalPrice = BigDecimal.ZERO;
+	    for (CartItem item : currentCartItems) {
+	        BigDecimal itemTotal = item.getProduct().getPrice()
+	                .multiply(BigDecimal.valueOf(item.getQuantity()));
+	        totalPrice = totalPrice.add(itemTotal);
+	    }
+	    
 	    cart.setTotalPrice(totalPrice);
+	    
 
 	    Cart savedCart = cartRepository.save(cart);
+	    
+	    ///////////////////////////////////////
 
 	    CartDto cartDto = new CartDto();
 	    UserDto userDto = new UserDto();
 	    BeanUtils.copyProperties(cart.getUser(), userDto);
 
 	    cartDto.setUserDto(userDto);
+	    
+	    //////////////////////////////////////
 
-	    List<ProductDto> productDtos = new ArrayList<>();
-	    for (Product product : currentProducts) {
+	    List<CartItemDto> cartItemDtos = new ArrayList<>();
+
+	    
+	    for (CartItem item : currentCartItems) {
+	        CartItemDto cartItemDto = new CartItemDto();
+	        BeanUtils.copyProperties(item, cartItemDto);
+	        
 	        ProductDto productDto = new ProductDto();
-	        BeanUtils.copyProperties(product, productDto);
-
+	        BeanUtils.copyProperties(item.getProduct(), productDto);
+	        cartItemDto.setProductDto(productDto);
+	        
 	        CategoryDto categoryDto = new CategoryDto();
-	        BeanUtils.copyProperties(product.getCategory(), categoryDto);
-
-	        productDto.setCategoryDto(categoryDto);
-
-	        productDtos.add(productDto);
+	        
+	        BeanUtils.copyProperties(item.getProduct().getCategory(), categoryDto);
+	        
+	        cartItemDto.getProductDto().setCategoryDto(categoryDto);
+	        
+	        cartItemDtos.add(cartItemDto);
 	    }
 
 	    BeanUtils.copyProperties(savedCart, cartDto);
-	    cartDto.setProductDtos(productDtos);
+	    cartDto.setCartItemDtos(cartItemDtos);
+	    cartDto.setTotalPrice(totalPrice);
 
 	    return cartDto;
 	}

@@ -5,7 +5,7 @@ import io.github.enesdernek.e_commerce.dto.CartDtoIU;
 
 public interface ICartService {
 	
-	public CartDto addProductToCart(Long cartId, Long productId);
+	public CartDto addProductToCart(Long cartId, Long productId,int quantity);
 	
 	public CartDto getCartByCartId(Long cartId);
 
