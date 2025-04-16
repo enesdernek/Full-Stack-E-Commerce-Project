@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 
 @Entity
 @Data
@@ -61,6 +60,9 @@ public class Product {
 	@JoinColumn(name = "category_id")
 	@ManyToOne
 	private Category category;
+	
+	@ManyToMany(mappedBy = "favoritedProducts")
+	private List<User> usersWhoFavorited;
 	
 	
 

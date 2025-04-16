@@ -1,7 +1,10 @@
 package io.github.enesdernek.e_commerce.service.abstracts;
 
+import java.util.List;
+
 import org.apache.coyote.BadRequestException;
 
+import io.github.enesdernek.e_commerce.dto.ProductDto;
 import io.github.enesdernek.e_commerce.dto.UserDto;
 import io.github.enesdernek.e_commerce.dto.UserDtoAuthIU;
 import io.github.enesdernek.e_commerce.dto.UserDtoIU;
@@ -14,5 +17,11 @@ public interface IUserService {
     UserDto register(UserDtoIU userDtoIU) throws BadRequestException;
     
     UserDto deleteByUserId(Long userId);
+    
+    void addProductToFavoriteListByUserIdAndProductId(Long userId,Long productId);
+    
+    void deleteProductFromFavoriteListByUserIdAndProductId(Long userId, Long productId);
+    
+    List<ProductDto>getFavoritedProductsListByUserId(Long userId);
     
 }
