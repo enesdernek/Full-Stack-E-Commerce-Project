@@ -25,4 +25,7 @@ public interface IProductService {
     List<ProductDto> getAllByPriceASCPaged(int pageNo,int pageSize);
     
     List<ProductDto> getAllByPriceDESCPaged(int pageNo,int pageSize);
+    
+    List<ProductDto> getAllByCategoryIdPaged(Long categoryId,int pageNo,int pageSize);
+    
 }

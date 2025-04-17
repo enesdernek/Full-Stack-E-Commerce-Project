@@ -68,4 +68,9 @@ public class ProductController {
 	public ResponseEntity<List<ProductDto>> getAllByPriceDESCPaged(@RequestParam int pageNo,@RequestParam int pageSize){
 		return new ResponseEntity<List<ProductDto>>(this.productService.getAllByPriceDESCPaged(pageNo,pageSize),HttpStatus.OK);
 	}
+	
+	@GetMapping("/get-all-by-categoryId")
+	public ResponseEntity<List<ProductDto>> getAllByCategoryIdPaged(@RequestParam Long categoryId,@RequestParam int pageNo,@RequestParam int pageSize){
+		return new ResponseEntity<List<ProductDto>>(this.productService.getAllByCategoryIdPaged(categoryId, pageNo, pageSize),HttpStatus.OK);
+	}
 }

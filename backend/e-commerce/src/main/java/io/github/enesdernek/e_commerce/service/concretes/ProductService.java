@@ -16,9 +16,11 @@ import io.github.enesdernek.e_commerce.dto.ProductDtoIU;
 import io.github.enesdernek.e_commerce.exception.NotFoundException;
 import io.github.enesdernek.e_commerce.model.Category;
 import io.github.enesdernek.e_commerce.model.Product;
+import io.github.enesdernek.e_commerce.model.User;
 import io.github.enesdernek.e_commerce.repository.CategoryRepository;
 import io.github.enesdernek.e_commerce.repository.ProductRepository;
 import io.github.enesdernek.e_commerce.service.abstracts.IProductService;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ProductService implements IProductService{
@@ -57,8 +59,15 @@ public class ProductService implements IProductService{
 		if (optionalProduct.isEmpty()) {
 		    throw new NotFoundException("There is no product with this id: " + productId);
 		}
+		
+		
 
 		Product product = optionalProduct.get();
+		
+		for (User user : product.getUsersWhoFavorited()) {
+		    user.getFavoritedProducts().remove(product);
+		}
+		
 		ProductDto productDto = new ProductDto();
 		BeanUtils.copyProperties(product, productDto);
 		Category category = product.getCategory();
@@ -210,6 +219,32 @@ public class ProductService implements IProductService{
 			productDto.setCategoryDto(categoryDto);
 			
 			productDtos.add(productDto);
+		}
+		
+		return productDtos;
+	}
+
+	@Override
+	public List<ProductDto> getAllByCategoryIdPaged(Long categoryId,int pageNo,int pageSize) {
+		
+		Pageable pageable = PageRequest.of(pageNo-1,pageSize);
+		
+		List<Product>products = this.productRepository.getAllByCategory_CategoryIdOrderByProductIdDescPaged(categoryId,pageable);
+		
+		List<ProductDto>productDtos = new ArrayList<>();
+		
+		for(Product product:products) {
+			
+			ProductDto productDto = new ProductDto();
+			BeanUtils.copyProperties(product, productDto);
+			
+			CategoryDto categoryDto = new CategoryDto();		
+			BeanUtils.copyProperties(product.getCategory(), categoryDto);
+			
+			productDto.setCategoryDto(categoryDto);
+			
+			productDtos.add(productDto);
+			
 		}
 		
 		return productDtos;

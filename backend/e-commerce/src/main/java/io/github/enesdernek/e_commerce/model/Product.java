@@ -3,6 +3,9 @@ package io.github.enesdernek.e_commerce.model;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.hibernate.annotations.Cascade;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -18,6 +21,7 @@ import lombok.NoArgsConstructor;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 @Data
@@ -52,10 +56,8 @@ public class Product {
 	@Column(name = "fav_count")
 	private int favCount;
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "image_paths", joinColumns = @JoinColumn(name = "product_id"))
 	@Column(name = "image_path")
-	private List<String> imagePaths;
+	private String imagePath;
 
 	@JoinColumn(name = "category_id")
 	@ManyToOne
@@ -64,6 +66,8 @@ public class Product {
 	@ManyToMany(mappedBy = "favoritedProducts")
 	private List<User> usersWhoFavorited;
 	
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<CartItem> cartItems;
 	
 
     

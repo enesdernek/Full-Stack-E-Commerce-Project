@@ -223,6 +223,18 @@ public class CartService implements ICartService{
 			
 	}
 
+	@Override
+	public void deleteAllItemsByCartId(Long cartId) {
+		 
+		Cart cart = this.cartRepository.findById(cartId)
+			    .orElseThrow(() -> new NotFoundException("Cart not found with id: " + cartId));
+		
+	    cart.getCartItems().clear();
+	
+		this.cartRepository.save(cart);
+		
+	}
+
 	
 
 

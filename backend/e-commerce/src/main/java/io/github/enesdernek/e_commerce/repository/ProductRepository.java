@@ -23,4 +23,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 	
 	@Query(value = "SELECT * FROM product ORDER BY price DESC",nativeQuery = true)
 	List<Product> getAllByPriceDESCPaged(Pageable pageable);
+	
+	@Query(value="SELECT * FROM product where category_id =:categoryId ORDER BY product_id desc",nativeQuery = true)
+	List<Product> getAllByCategory_CategoryIdOrderByProductIdDescPaged(Long categoryId,Pageable pageable);
 }

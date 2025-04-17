@@ -12,6 +12,8 @@ public interface ICartService {
 	
 	public CartDto changeItemQuantity(Long cartId, Long cartItemId,int quantity);
 	
+	public void deleteAllItemsByCartId(Long cartId);
+	
 
 
 
