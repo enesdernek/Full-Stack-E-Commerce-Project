@@ -15,7 +15,7 @@ public class OrderDto {
 	
 	private Long orderId;
 	
-	private List<CartItemDto>cartItemDtos;
+	private List<OrderItemDto>orderItemDtos;
 	
 	private LocalDateTime date;
 	

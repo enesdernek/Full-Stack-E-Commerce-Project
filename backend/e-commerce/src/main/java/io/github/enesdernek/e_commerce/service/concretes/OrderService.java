@@ -14,6 +14,8 @@ import io.github.enesdernek.e_commerce.dto.OrderDtoIU;
 import io.github.enesdernek.e_commerce.model.Cart;
 import io.github.enesdernek.e_commerce.model.CartItem;
 import io.github.enesdernek.e_commerce.model.Order;
+import io.github.enesdernek.e_commerce.model.OrderItem;
+import io.github.enesdernek.e_commerce.model.User;
 import io.github.enesdernek.e_commerce.repository.CartRepository;
 import io.github.enesdernek.e_commerce.repository.OrderRepository;
 import io.github.enesdernek.e_commerce.repository.UserRepository;
@@ -34,35 +36,36 @@ public class OrderService implements IOrderService{
 	@Override
 	public OrderDto add(Long userId,Long cartId,OrderDtoIU orderDtoIU) throws BadRequestException {
 		
-		Order order = new Order();
-		BeanUtils.copyProperties(orderDtoIU, order);
-			
-		Cart cart = this.cartRepository.findById(cartId).get();
-		
-		if(cart.getCartItems().size()==0) {
-			throw new BadRequestException("Cart can not be empty");
-		}
-		
-		order.setTotalPrice(cart.getTotalPrice());
-		
-		order.setUser(this.userRepository.findById(userId).get());
-		
-		List<CartItem> cartItems = new ArrayList<>(cart.getCartItems());
-		
-		
-		order.setCartItems(cartItems);
-		
-		for (CartItem item : cartItems) {
-		    item.setCart(null); // ilişkili cart'ı sıfırla
-		}
-		cart.getCartItems().clear();
+	    Order order = new Order();
 
-		cart.setTotalPrice(BigDecimal.ZERO);
-		this.cartRepository.save(cart);
-		
-		this.orderRepository.save(order);
-		
-		return null;
+	    User user = this.userRepository.findById(userId)
+	        .orElseThrow(() -> new BadRequestException("User not found."));
+	    order.setUser(user);
+
+	    Cart cart = this.cartRepository.findById(cartId)
+	        .orElseThrow(() -> new BadRequestException("Cart not found."));
+
+	    order.setTotalPrice(cart.getTotalPrice());
+
+	    // CartItem'ları OrderItem'a çevir
+	    List<OrderItem> orderItems = new ArrayList<>();
+	    
+	    for (CartItem cartItem : cart.getCartItems()) {
+	        OrderItem orderItem = new OrderItem();
+	        orderItem.setProduct(cartItem.getProduct());
+	        orderItem.setQuantity(cartItem.getQuantity());
+	        orderItem.setOrder(order);
+	        orderItems.add(orderItem);
+	    }
+	    order.setOrderItems(orderItems);
+
+	    Order savedOrder = this.orderRepository.save(order);
+
+	    cart.getCartItems().clear();
+	    cart.setTotalPrice(BigDecimal.ZERO); 
+	    this.cartRepository.save(cart);
+
+	    return null; 
 	}
 
 	@Override

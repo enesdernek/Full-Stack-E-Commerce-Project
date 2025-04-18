@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.annotation.Generated;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,15 +15,19 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Table(name = "orders")
 public class Order {
 
@@ -34,9 +39,8 @@ public class Order {
 	@Column(name = "date")
 	private LocalDateTime date;
 
-	@ManyToMany
-	@JoinTable(name = "order_cart_items", joinColumns = @JoinColumn(name = "order_id"), inverseJoinColumns = @JoinColumn(name = "cart_item_id"))
-	private List<CartItem> cartItems;
+	@OneToMany(mappedBy = "order",cascade = CascadeType.ALL,orphanRemoval = true)
+	private List<OrderItem> orderItems;
 
 	@Column(name = "total_price")
 	private BigDecimal totalPrice;

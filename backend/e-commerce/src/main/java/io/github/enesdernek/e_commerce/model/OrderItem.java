@@ -2,7 +2,6 @@ package io.github.enesdernek.e_commerce.model;
 
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,13 +19,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Table(name="cart_item")
-public class CartItem {
+@Table(name="order_item")
+public class OrderItem {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="cart_item_id")
-	private Long cartItemId;
+	@Column(name="order_item_id")
+	private Long orderItemId;
 	
 	@Column(name="quantity")
 	private int quantity;
@@ -36,8 +35,7 @@ public class CartItem {
     private Product product;
 	
 	@ManyToOne
-    @JoinColumn(name = "cart_id")
-    private Cart cart;
-
+	@JoinColumn(name="order_id")
+	private Order order;
 
 }
