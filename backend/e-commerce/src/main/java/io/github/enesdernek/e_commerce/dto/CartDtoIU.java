@@ -1,6 +1,5 @@
 package io.github.enesdernek.e_commerce.dto;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -17,7 +16,6 @@ public class CartDtoIU {
 	
 	private UserDto userDto;
 	
-	private BigDecimal totalPrice;
 	
 
 }

@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 public class OrderDtoIU {
 	
 	private LocalDateTime date;
+	
+	private String deliveryAdress;
 		
 	
 }

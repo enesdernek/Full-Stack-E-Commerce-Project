@@ -1,12 +1,14 @@
 package io.github.enesdernek.e_commerce.service.abstracts;
 
+import org.apache.coyote.BadRequestException;
+
 import io.github.enesdernek.e_commerce.dto.CartDto;
 import io.github.enesdernek.e_commerce.dto.CartDtoIU;
 import io.github.enesdernek.e_commerce.dto.CartItemDto;
 
 public interface ICartService {
 	
-	public CartDto addProductToCart(Long cartId, Long productId,int quantity);
+	public CartDto addProductToCart(Long cartId, Long productId,int quantity) throws BadRequestException;
 	
 	public CartDto getCartByCartId(Long cartId);
 	

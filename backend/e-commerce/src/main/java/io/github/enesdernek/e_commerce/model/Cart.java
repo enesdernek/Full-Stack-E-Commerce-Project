@@ -33,9 +33,6 @@ public class Cart {
 	@Column(name="cart_id")
 	private Long cartId;
 	
-	@Column(name="total_price")
-	private BigDecimal totalPrice;
-	
 	@OneToOne
 	@JoinColumn(name = "user_id")
 	private User user;

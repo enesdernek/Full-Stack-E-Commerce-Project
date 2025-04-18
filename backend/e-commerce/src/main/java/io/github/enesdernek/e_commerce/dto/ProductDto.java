@@ -38,7 +38,7 @@ public class ProductDto {
 	private int favCount;
 	
 	
-	private List<String> imagePaths;
+	private String imagePath;
 	
 	
 	private CategoryDto categoryDto;

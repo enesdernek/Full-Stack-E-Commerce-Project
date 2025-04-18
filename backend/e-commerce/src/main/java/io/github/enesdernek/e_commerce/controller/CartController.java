@@ -1,5 +1,6 @@
 package io.github.enesdernek.e_commerce.controller;
 
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class CartController {
 	private CartService cartService;
 	
 	@PostMapping
-	public ResponseEntity<CartDto> addProductToCart(@RequestParam Long cartId,@RequestParam Long productId,@RequestParam int quantity) {
+	public ResponseEntity<CartDto> addProductToCart(@RequestParam Long cartId,@RequestParam Long productId,@RequestParam int quantity) throws BadRequestException{
 		return new ResponseEntity<CartDto>(this.cartService.addProductToCart(cartId, productId,quantity),HttpStatus.OK);
 	}
 	

@@ -44,6 +44,9 @@ public class Order {
 
 	@Column(name = "total_price")
 	private BigDecimal totalPrice;
+	
+	@Column(name="delivery_adress")
+	private String deliveryAdress;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")

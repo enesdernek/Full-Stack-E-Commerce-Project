@@ -46,6 +46,9 @@ public class Product {
 
 	@Column(name = "price")
 	private BigDecimal price;
+	
+	@Column(name="discounted_price")
+	private BigDecimal discountedPrice;
 
 	@Column(name = "stock_quantity")
 	private int stockQuantity;

@@ -21,6 +21,8 @@ public class OrderDto {
 	
 	private BigDecimal totalPrice;
 	
+	private String deliveryAdress;
+	
 	private UserDto userDto;
 
 }

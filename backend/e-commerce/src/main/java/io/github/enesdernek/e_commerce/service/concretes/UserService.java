@@ -88,7 +88,6 @@ public class UserService implements IUserService{
 		user.setPassword(passwordEncoder.encode(userDtoIU.getPassword()));
 		
 		Cart cart = new Cart();
-	    cart.setTotalPrice(BigDecimal.ZERO); 
 	    cart.setCartItems(new ArrayList<>()); 
 
 	    cart.setUser(user); 	    

@@ -39,7 +39,7 @@ public class ProductDtoIU {
 	private int favCount;
 	
 	
-	private List<String> imagePaths;
+	private String imagePath;
 	
 	
 	private Long categoryId;

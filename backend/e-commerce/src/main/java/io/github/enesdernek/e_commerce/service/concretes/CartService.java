@@ -2,8 +2,10 @@ package io.github.enesdernek.e_commerce.service.concretes;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,153 +74,132 @@ public class CartService implements ICartService{
 		return cartDto;
 	}
 
+	
 	@Override
-	public CartDto addProductToCart(Long cartId, Long productId,int quantity) {
-	    
-	    Product addedProduct = this.productRepository.findById(productId).orElseThrow();
-	    Cart cart = this.cartRepository.findById(cartId).orElseThrow();
+	public CartDto addProductToCart(Long cartId, Long productId, int quantity) throws BadRequestException {
+
+	    Product addedProduct = this.productRepository.findById(productId)
+	            .orElseThrow(() -> new BadRequestException("Product not found"));
+	    Cart cart = this.cartRepository.findById(cartId)
+	            .orElseThrow(() -> new BadRequestException("Cart not found"));
+
+	    if (addedProduct.getStockQuantity() < quantity) {
+	        throw new BadRequestException("Not enough stock for product: " + addedProduct.getName());
+	    }
 
 	    List<CartItem> currentCartItems = cart.getCartItems();
-
 	    if (currentCartItems == null) {
-	    	currentCartItems = new ArrayList<>();
+	        currentCartItems = new ArrayList<>();
 	    }
-	    
+
 	    boolean itemUpdated = false;
 
-	   
+	    List<CartItem> updatedCartItems = new ArrayList<>();
+
 	    for (CartItem item : currentCartItems) {
 	        if (item.getProduct().getProductId().equals(productId)) {
-	            item.setQuantity(item.getQuantity() + quantity);
+	            int newQuantity = item.getQuantity() + quantity;
+	            if (addedProduct.getStockQuantity() < newQuantity) {
+	                throw new BadRequestException("Not enough stock to add the requested quantity for product: " + addedProduct.getName());
+	            }
+	            item.setQuantity(newQuantity);
 	            itemUpdated = true;
-	            break;
 	        }
+	        updatedCartItems.add(item);
 	    }
-	    
+
 	    if (!itemUpdated) {
-	        CartItem cartItem = new CartItem();
-	        cartItem.setProduct(addedProduct);
-	        cartItem.setQuantity(quantity);
-	        cartItem.setCart(cart);
-	        currentCartItems.add(cartItem);
+	        CartItem newItem = new CartItem();
+	        newItem.setProduct(addedProduct);
+	        newItem.setQuantity(quantity);
+	        newItem.setCart(cart);
+	        updatedCartItems.add(newItem);
 	    }
 
-	    cart.setCartItems(currentCartItems);
-	    
-	    BigDecimal totalPrice = BigDecimal.ZERO;
-	    for (CartItem item : currentCartItems) {
-	        BigDecimal itemTotal = item.getProduct().getPrice()
-	                .multiply(BigDecimal.valueOf(item.getQuantity()));
-	        totalPrice = totalPrice.add(itemTotal);
+	
+	    cart.getCartItems().clear();
+	    for (CartItem item : updatedCartItems) {
+	        item.setCart(cart); 
+	        cart.getCartItems().add(item);
 	    }
-	    
-	    cart.setTotalPrice(totalPrice);
-	    
 
-	    Cart savedCart = cartRepository.save(cart);
-	    
+	    Cart savedCart = this.cartRepository.save(cart);
 
 	    CartDto cartDto = new CartDto();
-	    UserDto userDto = new UserDto();
-	    BeanUtils.copyProperties(cart.getUser(), userDto);
+	    BeanUtils.copyProperties(savedCart, cartDto);
 
+	    UserDto userDto = new UserDto();
+	    BeanUtils.copyProperties(savedCart.getUser(), userDto);
 	    cartDto.setUserDto(userDto);
-	    
 
 	    List<CartItemDto> cartItemDtos = new ArrayList<>();
-
-	    
-	    for (CartItem item : currentCartItems) {
+	    for (CartItem item : savedCart.getCartItems()) {
 	        CartItemDto cartItemDto = new CartItemDto();
 	        BeanUtils.copyProperties(item, cartItemDto);
-	        
+
 	        ProductDto productDto = new ProductDto();
 	        BeanUtils.copyProperties(item.getProduct(), productDto);
-	        cartItemDto.setProductDto(productDto);
-	        
+
 	        CategoryDto categoryDto = new CategoryDto();
-	        
 	        BeanUtils.copyProperties(item.getProduct().getCategory(), categoryDto);
-	        
-	        cartItemDto.getProductDto().setCategoryDto(categoryDto);
-	        
+	        productDto.setCategoryDto(categoryDto);
+
+	        cartItemDto.setProductDto(productDto);
 	        cartItemDtos.add(cartItemDto);
 	    }
 
-	    BeanUtils.copyProperties(savedCart, cartDto);
 	    cartDto.setCartItemDtos(cartItemDtos);
-	    cartDto.setTotalPrice(totalPrice);
-
 	    return cartDto;
 	}
+
+
 	
 	@Override
-	public CartDto changeItemQuantity(Long cartId, Long cartItemId,int quantity) {
-			
-		 if (quantity < 0) {
-		        throw new IllegalArgumentException("Quantity cannot be less than 0");
-		    }
+	public CartDto changeItemQuantity(Long cartId, Long cartItemId, int quantity) {
+	    if (quantity < 0) {
+	        throw new IllegalArgumentException("Quantity cannot be less than 0");
+	    }
 
-		    CartItem cartItem = cartItemRepository.findById(cartItemId)
-		            .orElseThrow(() -> new EntityNotFoundException("CartItem not found"));
+	    CartItem cartItem = cartItemRepository.findById(cartItemId)
+	            .orElseThrow(() -> new EntityNotFoundException("CartItem not found"));
 
-		    Cart cart = cartRepository.findById(cartId)
-		            .orElseThrow(() -> new EntityNotFoundException("Cart not found"));
+	    Cart cart = cartRepository.findById(cartId)
+	            .orElseThrow(() -> new EntityNotFoundException("Cart not found"));
 
-		    if (quantity == 0) {
-		      
-		        cart.getCartItems().removeIf(item -> item.getCartItemId().equals(cartItemId));
-		        cartItemRepository.deleteById(cartItemId);
-		        
-		    } else {
-		       
-		        cartItem.setQuantity(quantity);
-		        cartItemRepository.save(cartItem);
-		    }
+	    Product product = cartItem.getProduct();
 
-		    BigDecimal newTotalPrice = BigDecimal.ZERO;
-		    List<CartItem> cartItems = cart.getCartItems();
+	    if (quantity == 0) {
+	        product.setStockQuantity(product.getStockQuantity() + cartItem.getQuantity());
+	        productRepository.save(product);  
 
-		    for (CartItem item : cartItems) {
-		        BigDecimal price = item.getProduct().getPrice(); 
-		        BigDecimal qty = BigDecimal.valueOf(item.getQuantity());
-		        newTotalPrice = newTotalPrice.add(price.multiply(qty));
-		    }
+	        cart.getCartItems().removeIf(item -> item.getCartItemId().equals(cartItemId));
+	        cartItemRepository.deleteById(cartItemId);
+	    } else {
+	        
+	        if (product.getStockQuantity() < quantity) {
+	            throw new IllegalArgumentException("Not enough stock for product: " + product.getName());
+	        }
 
-		    cart.setTotalPrice(newTotalPrice);
-		    cartRepository.save(cart);
-		    
-		    CartDto cartDto = new CartDto();
-		    BeanUtils.copyProperties(cart, cartDto);
-		    
-		    List<CartItemDto>cartItemDtos = new ArrayList<CartItemDto>();
-		    
-		    for(CartItem cartItem_ : cart.getCartItems()) {
-		    	 CartItemDto cartItemDto = new CartItemDto();
-				 BeanUtils.copyProperties(cartItem_, cartItemDto);
-				 
-				 ProductDto productDto = new ProductDto();
-				 BeanUtils.copyProperties(cartItem_.getProduct(), productDto);
-				 
-				 CategoryDto categoryDto = new CategoryDto();
-				 BeanUtils.copyProperties(cartItem_.getProduct().getCategory(), categoryDto);
-				 
-				 productDto.setCategoryDto(categoryDto);
-				    
-				 cartItemDto.setProductDto(productDto);
-				 
-				 cartItemDtos.add(cartItemDto);			 
-		    }
-		       
-		    
-		    cartDto.setCartItemDtos(cartItemDtos);
-		    
-		    UserDto userDto = new UserDto();
-		    BeanUtils.copyProperties(cart.getUser(), userDto);
-		    cartDto.setUserDto(userDto);
-		    
-		    return cartDto;
-			
+	       
+	        product.setStockQuantity(product.getStockQuantity() + (cartItem.getQuantity() - quantity));
+	        productRepository.save(product); 
+
+	        cartItem.setQuantity(quantity);
+	        cartItemRepository.save(cartItem);
+	    }
+
+	    BigDecimal newTotalPrice = BigDecimal.ZERO;
+	    for (CartItem item : cart.getCartItems()) {
+	        BigDecimal itemTotal = item.getProduct().getDiscountedPrice()
+	                .multiply(BigDecimal.valueOf(item.getQuantity()));
+	        newTotalPrice = newTotalPrice.add(itemTotal);
+	    }
+
+	    cartRepository.save(cart); 
+
+	    CartDto cartDto = new CartDto();
+	    BeanUtils.copyProperties(cart, cartDto);
+	    return cartDto;
 	}
 
 	@Override
