@@ -47,7 +47,6 @@ public class OrderService implements IOrderService{
 
 	    order.setTotalPrice(cart.getTotalPrice());
 
-	    // CartItem'ları OrderItem'a çevir
 	    List<OrderItem> orderItems = new ArrayList<>();
 	    
 	    for (CartItem cartItem : cart.getCartItems()) {

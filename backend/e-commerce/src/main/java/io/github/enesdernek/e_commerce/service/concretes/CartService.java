@@ -117,7 +117,6 @@ public class CartService implements ICartService{
 
 	    Cart savedCart = cartRepository.save(cart);
 	    
-	    ///////////////////////////////////////
 
 	    CartDto cartDto = new CartDto();
 	    UserDto userDto = new UserDto();
@@ -125,7 +124,6 @@ public class CartService implements ICartService{
 
 	    cartDto.setUserDto(userDto);
 	    
-	    //////////////////////////////////////
 
 	    List<CartItemDto> cartItemDtos = new ArrayList<>();
 
@@ -182,7 +180,7 @@ public class CartService implements ICartService{
 		    List<CartItem> cartItems = cart.getCartItems();
 
 		    for (CartItem item : cartItems) {
-		        BigDecimal price = item.getProduct().getPrice(); // BigDecimal
+		        BigDecimal price = item.getProduct().getPrice(); 
 		        BigDecimal qty = BigDecimal.valueOf(item.getQuantity());
 		        newTotalPrice = newTotalPrice.add(price.multiply(qty));
 		    }
@@ -234,6 +232,9 @@ public class CartService implements ICartService{
 		this.cartRepository.save(cart);
 		
 	}
+
+	
+	
 
 	
 

@@ -48,22 +48,22 @@ public static final String AUTHENTICATE = "/users/authenticate";
 	  @Bean
 	    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 	        http
-	            .cors() // Enable CORS
+	            .cors() 
 	            .and()
-	            .csrf().disable() // Disable CSRF for stateless sessions
+	            .csrf().disable() 
 	            .authorizeRequests(request -> request
-	                .requestMatchers(AUTHENTICATE, REGISTER).permitAll() // Allow public access to AUTHENTICATE and REGISTER
+	                .requestMatchers(AUTHENTICATE, REGISTER).permitAll() 
 	                .requestMatchers(SWAGGER_PATHS).permitAll()
-	                .requestMatchers(ALLOWED_PATHS).permitAll()// Allow access to Swagger paths
-	                .anyRequest().authenticated() // All other requests require authentication
+	                .requestMatchers(ALLOWED_PATHS).permitAll()
+	                .anyRequest().authenticated() 
 	            )
 	            .sessionManagement(session -> session
-	                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Use stateless sessions
+	                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) 
 	            )
-	            .authenticationProvider(authenticationProvider) // Set custom authentication provider
-	            .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class) // Add custom authentication filter
+	            .authenticationProvider(authenticationProvider) 
+	            .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class) 
 	            .exceptionHandling(exception -> exception
-	                .authenticationEntryPoint(authEntryPoint) // Handle authentication exceptions
+	                .authenticationEntryPoint(authEntryPoint) 
 	            );
 
 	        return http.build();
@@ -75,10 +75,10 @@ public static final String AUTHENTICATE = "/users/authenticate";
 	            @Override
 	            public void addCorsMappings(CorsRegistry registry) {
 	                registry.addMapping("/**")
-	                        .allowedOrigins("http://localhost:5173","http://localhost:5174")  // Allow localhost:5173
-	                        .allowedMethods("GET", "POST", "PUT", "DELETE")  // Specify allowed HTTP methods
-	                        .allowedHeaders("*")  // Allow any headers
-	                        .allowCredentials(true);  // Allow cookies/auth credentials
+	                        .allowedOrigins("http://localhost:5173","http://localhost:5174")  
+	                        .allowedMethods("GET", "POST", "PUT", "DELETE")  
+	                        .allowedHeaders("*")  
+	                        .allowCredentials(true);  
 	            }
 	        };
 	    }
