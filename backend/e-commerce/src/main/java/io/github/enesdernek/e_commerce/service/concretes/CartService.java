@@ -19,9 +19,11 @@ import io.github.enesdernek.e_commerce.exception.NotFoundException;
 import io.github.enesdernek.e_commerce.model.Cart;
 import io.github.enesdernek.e_commerce.model.CartItem;
 import io.github.enesdernek.e_commerce.model.Product;
+import io.github.enesdernek.e_commerce.model.User;
 import io.github.enesdernek.e_commerce.repository.CartItemRepository;
 import io.github.enesdernek.e_commerce.repository.CartRepository;
 import io.github.enesdernek.e_commerce.repository.ProductRepository;
+import io.github.enesdernek.e_commerce.repository.UserRepository;
 import io.github.enesdernek.e_commerce.service.abstracts.ICartService;
 import jakarta.persistence.EntityNotFoundException;
 
@@ -37,10 +39,15 @@ public class CartService implements ICartService{
 	@Autowired
 	private CartItemRepository cartItemRepository;
 	
+	@Autowired
+	private UserRepository userRepository;
+	
 	@Override
-	public CartDto getCartByCartId(Long cartId) {
+	public CartDto getCartByUsername(String username) {
 		
-		Cart cart = this.cartRepository.findById(cartId).get();
+		User user = this.userRepository.findByUsername(username);
+		
+		Cart cart = this.cartRepository.findById(user.getCart().getCartId()).get();
 		CartDto cartDto = new CartDto();
 				
 		BeanUtils.copyProperties(cart, cartDto);
@@ -76,11 +83,15 @@ public class CartService implements ICartService{
 
 	
 	@Override
-	public CartDto addProductToCart(Long cartId, Long productId, int quantity) throws BadRequestException {
+	public CartDto addProductToCart(String username, Long productId, int quantity) throws BadRequestException {
 
 	    Product addedProduct = this.productRepository.findById(productId)
 	            .orElseThrow(() -> new BadRequestException("Product not found"));
-	    Cart cart = this.cartRepository.findById(cartId)
+	    
+	    User user = this.userRepository.findByUsername(username);
+	    
+	    
+	    Cart cart = this.cartRepository.findById(user.getCart().getCartId())
 	            .orElseThrow(() -> new BadRequestException("Cart not found"));
 
 	    if (addedProduct.getStockQuantity() < quantity) {
@@ -155,15 +166,17 @@ public class CartService implements ICartService{
 
 	
 	@Override
-	public CartDto changeItemQuantity(Long cartId, Long cartItemId, int quantity) {
+	public CartDto changeItemQuantity(String username, Long cartItemId, int quantity) {
 	    if (quantity < 0) {
 	        throw new IllegalArgumentException("Quantity cannot be less than 0");
 	    }
+	    
+	    User user = this.userRepository.findByUsername(username);
 
 	    CartItem cartItem = cartItemRepository.findById(cartItemId)
 	            .orElseThrow(() -> new EntityNotFoundException("CartItem not found"));
 
-	    Cart cart = cartRepository.findById(cartId)
+	    Cart cart = cartRepository.findById(user.getCart().getCartId())
 	            .orElseThrow(() -> new EntityNotFoundException("Cart not found"));
 
 	    Product product = cartItem.getProduct();
@@ -199,14 +212,43 @@ public class CartService implements ICartService{
 
 	    CartDto cartDto = new CartDto();
 	    BeanUtils.copyProperties(cart, cartDto);
+	    
+	    UserDto userDto = new UserDto();
+	    BeanUtils.copyProperties(cart.getUser(), userDto);
+	    cartDto.setUserDto(userDto);
+	    
+	    List<CartItemDto> cartItemDtos = new ArrayList<>();
+	    
+	    for(CartItem ci : cart.getCartItems()) {
+	    	
+	    	CartItemDto cartItemDto = new CartItemDto();
+	    	BeanUtils.copyProperties(ci, cartItemDto);
+	    	
+	    	ProductDto productDto = new ProductDto();
+	    	BeanUtils.copyProperties(ci.getProduct(), productDto);
+	    	
+	    	CategoryDto categoryDto = new CategoryDto();
+	    	BeanUtils.copyProperties(ci.getProduct().getCategory(), categoryDto);
+	    	
+	    	productDto.setCategoryDto(categoryDto);
+	    	cartItemDto.setProductDto(productDto);
+	    	
+	    	cartItemDtos.add(cartItemDto);
+	    	
+	    }
+	    
+	    cartDto.setCartItemDtos(cartItemDtos);
+	    
 	    return cartDto;
 	}
 
 	@Override
-	public void deleteAllItemsByCartId(Long cartId) {
+	public void deleteAllItemsByUsername(String username) {
+		
+		User user = this.userRepository.findByUsername(username);
 		 
-		Cart cart = this.cartRepository.findById(cartId)
-			    .orElseThrow(() -> new NotFoundException("Cart not found with id: " + cartId));
+		Cart cart = this.cartRepository.findById(user.getCart().getCartId())
+			    .orElseThrow(() -> new NotFoundException("Cart not found with id: " + user.getCart().getCartId()));
 		
 	    cart.getCartItems().clear();
 	

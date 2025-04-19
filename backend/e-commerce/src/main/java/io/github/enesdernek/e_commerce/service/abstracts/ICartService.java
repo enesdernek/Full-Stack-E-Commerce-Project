@@ -8,13 +8,13 @@ import io.github.enesdernek.e_commerce.dto.CartItemDto;
 
 public interface ICartService {
 	
-	public CartDto addProductToCart(Long cartId, Long productId,int quantity) throws BadRequestException;
+	public CartDto addProductToCart(String username, Long productId, int quantity) throws BadRequestException;
 	
-	public CartDto getCartByCartId(Long cartId);
+	public CartDto getCartByUsername(String username);
 	
-	public CartDto changeItemQuantity(Long cartId, Long cartItemId,int quantity);
+	public CartDto changeItemQuantity(String username, Long cartItemId,int quantity);
 	
-	public void deleteAllItemsByCartId(Long cartId);
+	public void deleteAllItemsByUsername(String username);
 	
 
 
