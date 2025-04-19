@@ -6,6 +6,7 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,23 +41,35 @@ public class UserController {
 	}
 	
 	@DeleteMapping
-	public ResponseEntity<UserDto> deleteByUserId(@RequestParam Long userId) {
-		return new ResponseEntity<UserDto>(this.userService.deleteByUserId(userId),HttpStatus.OK);
+	public ResponseEntity<UserDto> deleteByUsername(Authentication authentication) {
+		
+		String username = authentication.getName();
+				
+		return new ResponseEntity<UserDto>(this.userService.deleteByUsername(username),HttpStatus.OK);
 	}
 	
 	@PostMapping("/add-product-to-favoriteds-list")
-	public void addProductToFavoriteListByUserIdAndProductId(@RequestParam Long userId, @RequestParam Long productId) {
-	    this.userService.addProductToFavoriteListByUserIdAndProductId(userId, productId);
+	public void addProductToFavoriteListByUserIdAndProductId(Authentication authentication,@RequestParam Long productId) {
+		
+		String username = authentication.getName();
+		
+	    this.userService.addProductToFavoriteListByUsernameAndProductId(username, productId);
 	}
 
 	@DeleteMapping("/delete-product-from-favoriteds-list")
-	public void deleteProductFromFavoriteListByUserIdAndProductId(@RequestParam Long userId, @RequestParam Long productId) {
-	    this.userService.deleteProductFromFavoriteListByUserIdAndProductId(userId, productId); // Hatalı metoddan düzeltildi
+	public void deleteProductFromFavoriteListByUserIdAndProductId(Authentication authentication, @RequestParam Long productId) {
+		
+		String username = authentication.getName();
+		
+	    this.userService.deleteProductFromFavoriteListByUsernameAndProductId(username, productId); // Hatalı metoddan düzeltildi
 	}
 	
 	@GetMapping("/favorited-products")
-	public ResponseEntity<List<ProductDto>> getFavoritedProductsListByUserId(@RequestParam Long userId){
-		return new ResponseEntity<List<ProductDto>>(this.userService.getFavoritedProductsListByUserId(userId),HttpStatus.OK);
+	public ResponseEntity<List<ProductDto>> getFavoritedProductsList(Authentication authentication){
+		
+		String username = authentication.getName();
+		
+		return new ResponseEntity<List<ProductDto>>(this.userService.getFavoritedProductsListByUsername(username),HttpStatus.OK);
 	}
 	
 

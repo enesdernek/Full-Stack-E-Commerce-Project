@@ -31,7 +31,7 @@ public class CartController {
 	@PostMapping
 	public ResponseEntity<CartDto> addProductToCart(@RequestParam Long productId,@RequestParam int quantity,Authentication authentication) throws BadRequestException{
 		
-	    String username = (String) authentication.getPrincipal();
+		String username = (String) authentication.getName();
 		       
 		return new ResponseEntity<CartDto>(this.cartService.addProductToCart(username,productId,quantity),HttpStatus.OK);
 	}
@@ -39,7 +39,7 @@ public class CartController {
 	@GetMapping
 	public ResponseEntity<CartDto>  getCartByUser(Authentication authentication) {
 		
-		String username = (String) authentication.getPrincipal();
+		String username = (String) authentication.getName();
 		
 		return new ResponseEntity<CartDto>(this.cartService.getCartByUsername(username),HttpStatus.OK);
 	}
@@ -47,7 +47,7 @@ public class CartController {
 	@PutMapping("/change-item-quantity")
 	public ResponseEntity<CartDto> changeItemQuantity(@RequestParam Long cartItemId,@RequestParam int quantity,Authentication authentication){
 			
-		String username = (String) authentication.getPrincipal();
+		String username = (String) authentication.getName();
 		
 		return new ResponseEntity<CartDto>(this.cartService.changeItemQuantity(username, cartItemId, quantity),HttpStatus.OK);
 	}
@@ -55,7 +55,7 @@ public class CartController {
 	@DeleteMapping
 	public void deleteAllItems(Authentication authentication) {
 		
-		String username = (String) authentication.getPrincipal();
+		String username = (String) authentication.getName();
 		
 		this.cartService.deleteAllItemsByUsername(username);
 	}

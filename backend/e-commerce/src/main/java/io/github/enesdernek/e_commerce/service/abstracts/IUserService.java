@@ -18,12 +18,12 @@ public interface IUserService {
 
     UserDto register(UserDtoIU userDtoIU) throws BadRequestException;
     
-    UserDto deleteByUserId(Long userId);
+    UserDto deleteByUsername(String username);
     
-    void addProductToFavoriteListByUserIdAndProductId(Long userId,Long productId);
+    void addProductToFavoriteListByUsernameAndProductId(String username,Long productId);
     
-    void deleteProductFromFavoriteListByUserIdAndProductId(Long userId, Long productId);
+    void deleteProductFromFavoriteListByUsernameAndProductId(String username, Long productId);
     
-    List<ProductDto>getFavoritedProductsListByUserId(Long userId);
+    List<ProductDto>getFavoritedProductsListByUsername(String username);
     
 }

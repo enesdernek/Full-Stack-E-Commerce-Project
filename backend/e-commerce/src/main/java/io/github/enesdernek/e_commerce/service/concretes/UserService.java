@@ -120,8 +120,9 @@ public class UserService implements IUserService{
 
 
 	@Override
-	public UserDto deleteByUserId(Long userId) {
-		User deletedUser = this.userRepository.findById(userId).get();
+	public UserDto deleteByUsername(String username) {
+		User deletedUser = this.userRepository.findByUsername(username);
+		Long userId= deletedUser.getUserId();
 		UserDto userDto = new UserDto();
 		BeanUtils.copyProperties(deletedUser, userDto);
 		this.userRepository.deleteById(userId);
@@ -130,9 +131,9 @@ public class UserService implements IUserService{
 
 
 	@Override
-	public void addProductToFavoriteListByUserIdAndProductId(Long userId, Long productId) {
+	public void addProductToFavoriteListByUsernameAndProductId(String username, Long productId) {
 		
-		User user = this.userRepository.findById(userId).get();
+		User user = this.userRepository.findByUsername(username);
 		
 		Product product = this.productRepository.findById(productId).get();
 		
@@ -151,9 +152,9 @@ public class UserService implements IUserService{
 	}
 	
 	@Override
-	public void deleteProductFromFavoriteListByUserIdAndProductId(Long userId, Long productId) {
+	public void deleteProductFromFavoriteListByUsernameAndProductId(String username, Long productId) {
 		
-		User user = this.userRepository.findById(userId).get();
+		User user = this.userRepository.findByUsername(username);
 		
 		Product product = this.productRepository.findById(productId).get();
 		
@@ -175,9 +176,9 @@ public class UserService implements IUserService{
 
 
 	@Override
-	public List<ProductDto> getFavoritedProductsListByUserId(Long userId) {
+	public List<ProductDto> getFavoritedProductsListByUsername(String username) {
 		
-		User user = this.userRepository.findById(userId).get();
+		User user = this.userRepository.findByUsername(username);
 		
 		List<Product>favoritedProducts = user.getFavoritedProducts();
 		
