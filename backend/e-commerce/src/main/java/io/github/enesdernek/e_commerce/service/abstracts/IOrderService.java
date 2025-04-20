@@ -9,7 +9,7 @@ import io.github.enesdernek.e_commerce.dto.OrderDtoIU;
 
 public interface IOrderService {
 	
-	OrderDto add(Long UserId,Long cartId,OrderDtoIU orderDtoIU) throws BadRequestException;
+	OrderDto add(String username ,OrderDtoIU orderDtoIU) throws BadRequestException;
 	
 	List<OrderDto>getAllByUserId(Long userId);
 	

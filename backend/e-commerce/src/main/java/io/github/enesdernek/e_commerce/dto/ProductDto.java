@@ -39,8 +39,8 @@ public class ProductDto {
 	
 	
 	private String imagePath;
-	
-	
+		
+
 	private CategoryDto categoryDto;
 
 }

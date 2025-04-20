@@ -10,8 +10,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import io.github.enesdernek.e_commerce.dto.CategoryDto;
 import io.github.enesdernek.e_commerce.dto.OrderDto;
 import io.github.enesdernek.e_commerce.dto.OrderDtoIU;
+import io.github.enesdernek.e_commerce.dto.OrderItemDto;
+import io.github.enesdernek.e_commerce.dto.ProductDto;
+import io.github.enesdernek.e_commerce.dto.UserDto;
 import io.github.enesdernek.e_commerce.model.Cart;
 import io.github.enesdernek.e_commerce.model.CartItem;
 import io.github.enesdernek.e_commerce.model.Order;
@@ -40,21 +44,22 @@ public class OrderService implements IOrderService {
 	private ProductRepository productRepository;
 
 	@Override
-	public OrderDto add(Long userId, Long cartId, OrderDtoIU orderDtoIU) throws BadRequestException {
+	public OrderDto add(String username ,OrderDtoIU orderDtoIU) throws BadRequestException {
 
 	    Order order = new Order();
+	    BeanUtils.copyProperties(orderDtoIU, order);
 
-	    User user = this.userRepository.findById(userId)
-	            .orElseThrow(() -> new BadRequestException("User not found."));
+	    User user = this.userRepository.findByUsername(username);
+	            
 	    order.setUser(user);
 
-	    Cart cart = this.cartRepository.findById(cartId)
+	    Cart cart = this.cartRepository.findById(user.getCart().getCartId())
 	            .orElseThrow(() -> new BadRequestException("Cart not found."));
 
 	    List<OrderItem> orderItems = new ArrayList<>();
 	    BigDecimal totalPrice = BigDecimal.ZERO;
 
-	    for (CartItem cartItem : new ArrayList<>(cart.getCartItems())) { // ✅ güvenli kopya ile döngü
+	    for (CartItem cartItem : new ArrayList<>(cart.getCartItems())) { 
 
 	        Product product = cartItem.getProduct();
 	        int quantity = cartItem.getQuantity();
@@ -103,8 +108,36 @@ public class OrderService implements IOrderService {
 
 	    cart.getCartItems().clear();
 	    this.cartRepository.save(cart);
+	    
+	    OrderDto orderDto = new OrderDto();
+	    BeanUtils.copyProperties(savedOrder, orderDto);
+	    
+	    UserDto userDto = new UserDto();
+	    BeanUtils.copyProperties(user, userDto);
+	    orderDto.setUserDto(userDto);
+	    
+	    List<OrderItemDto>orderItemDtos = new ArrayList<>();
+	    
+	    for(OrderItem oi : orderItems) {
+	    	OrderItemDto orderItemDto = new OrderItemDto();
+	    	BeanUtils.copyProperties(oi, orderItemDto);
+	    	
+	    	ProductDto productDto = new ProductDto();
+	    	BeanUtils.copyProperties(oi.getProduct(), productDto);
+	    	
+	    	CategoryDto categoryDto = new CategoryDto();
+	    	BeanUtils.copyProperties(oi.getProduct().getCategory(), categoryDto);
+	    	
+	    	productDto.setCategoryDto(categoryDto);
+	    	orderItemDto.setProductDto(productDto);
+	    	
+	    	orderItemDtos.add(orderItemDto);
+	    	
+	    }
+	    
+	    orderDto.setOrderItemDtos(orderItemDtos);
 
-	    return null; 
+	    return orderDto; 
 	}
 
 

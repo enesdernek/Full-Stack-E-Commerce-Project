@@ -4,6 +4,7 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,8 +23,11 @@ public class OrderController {
 	private OrderService orderService;
 	
 	@PostMapping
-	public ResponseEntity<OrderDto> add(@RequestParam Long userId,@RequestParam Long cartId,@RequestBody OrderDtoIU orderDtoIU) throws BadRequestException{
-		return new ResponseEntity<OrderDto>(this.orderService.add(userId,cartId,orderDtoIU),HttpStatus.OK);
+	public ResponseEntity<OrderDto> add(Authentication authentication,@RequestBody OrderDtoIU orderDtoIU) throws BadRequestException{
+		
+		String username = authentication.getName();
+		
+		return new ResponseEntity<OrderDto>(this.orderService.add(username,orderDtoIU),HttpStatus.OK);
 	}
 
 }

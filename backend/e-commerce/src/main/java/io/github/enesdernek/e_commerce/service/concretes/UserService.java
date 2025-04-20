@@ -23,9 +23,12 @@ import io.github.enesdernek.e_commerce.exception.UsernameOrPasswordFalseExceptio
 import io.github.enesdernek.e_commerce.jwt.AuthResponse;
 import io.github.enesdernek.e_commerce.jwt.JwtService;
 import io.github.enesdernek.e_commerce.model.Cart;
+import io.github.enesdernek.e_commerce.model.Order;
+import io.github.enesdernek.e_commerce.model.OrderItem;
 import io.github.enesdernek.e_commerce.model.Product;
 import io.github.enesdernek.e_commerce.model.User;
 import io.github.enesdernek.e_commerce.repository.CartRepository;
+import io.github.enesdernek.e_commerce.repository.OrderRepository;
 import io.github.enesdernek.e_commerce.repository.ProductRepository;
 import io.github.enesdernek.e_commerce.repository.UserRepository;
 import io.github.enesdernek.e_commerce.service.abstracts.IUserService;
@@ -50,6 +53,9 @@ public class UserService implements IUserService{
 	
 	@Autowired
 	private ProductRepository productRepository;
+	
+	@Autowired
+	private OrderRepository orderRepository;
 	
 	public Long getAuthenticatedUserId() {
 	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -145,6 +151,9 @@ public class UserService implements IUserService{
 		
 		favoritedProducts.add(product);
 		
+		product.setFavCount(product.getFavCount()+1);
+		this.productRepository.save(product);
+		
 		user.setFavoritedProducts(favoritedProducts);
 		
 		this.userRepository.save(user);
@@ -167,6 +176,9 @@ public class UserService implements IUserService{
 	    }
 		
 		favoritedProducts.remove(product);
+		
+		product.setFavCount(product.getFavCount()-1);
+		this.productRepository.save(product);
 		
 		user.setFavoritedProducts(favoritedProducts);
 		
@@ -196,5 +208,7 @@ public class UserService implements IUserService{
 		
 		return productDtos;
 	}
+
+
 
 }

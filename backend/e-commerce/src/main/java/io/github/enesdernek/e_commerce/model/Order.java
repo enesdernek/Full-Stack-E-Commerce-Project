@@ -47,7 +47,8 @@ public class Order {
 	
 	@Column(name="delivery_adress")
 	private String deliveryAdress;
-
+	
+	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
