@@ -73,6 +73,15 @@ public class UserController {
 		return new ResponseEntity<List<ProductDto>>(this.userService.getFavoritedProductsListByUsername(username),HttpStatus.OK);
 	}
 	
+	@PutMapping("/rate-product")
+	public ResponseEntity<ProductDto> rateProductByUsernameAndProductId(Authentication authentication,Long orderId, Long productId,double rating) {
+		
+		String username = authentication.getName();
+		
+		return new ResponseEntity<ProductDto>(this.userService.rateProductByUsernameAndProductId(username, orderId, productId, rating),HttpStatus.OK);
+		
+	}
+	
 	
 
 }

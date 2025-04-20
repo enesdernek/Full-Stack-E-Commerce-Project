@@ -3,7 +3,7 @@ package io.github.enesdernek.e_commerce.dto;
 import java.math.BigDecimal;
 import java.util.List;
 
-
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,8 +39,11 @@ public class ProductDto {
 	
 	
 	private String imagePath;
+	
+	private double rating; 
+	
+	private int totalRatingCount;
 		
-
 	private CategoryDto categoryDto;
 
 }

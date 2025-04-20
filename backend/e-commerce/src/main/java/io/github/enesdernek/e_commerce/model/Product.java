@@ -62,7 +62,15 @@ public class Product {
 	@Column(name = "image_path")
 	private String imagePath;
 	
-
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<ProductRating> productRatings;
+	
+	@Column(name = "rating")
+	private double rating; 
+	
+	@Column(name="total_rating_count")
+	private int totalRatingCount;
+	
 	@JoinColumn(name = "category_id")
 	@ManyToOne
 	private Category category;

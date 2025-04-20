@@ -26,5 +26,7 @@ public interface IUserService {
     
     List<ProductDto>getFavoritedProductsListByUsername(String username);
     
+    ProductDto rateProductByUsernameAndProductId(String username, Long orderId, Long productId,double rating);
+    
     
 }

@@ -18,67 +18,48 @@ import io.github.enesdernek.e_commerce.jwt.JwtAuthenticationFilter;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-	
-public static final String AUTHENTICATE = "/users/authenticate";
-	
+
+	public static final String AUTHENTICATE = "/users/authenticate";
+
 	public static final String REGISTER = "/users/register";
-	
-	public static final String [] ALLOWED_PATHS= {
-			"/example",
-			
+
+	public static final String[] ALLOWED_PATHS = { "/products/**","/categories/**"
+
 	};
-	
-	public static final String[] SWAGGER_PATHS = {
-			"/swagger-ui/**",
-			"v3/api-docs/**",
-			"swagger-ui.html"
-	};
-	
-	
+
+	public static final String[] SWAGGER_PATHS = { "/swagger-ui/**", "v3/api-docs/**", "swagger-ui.html" };
+
 	@Autowired
 	private AuthenticationProvider authenticationProvider;
-	
+
 	@Autowired
 	private JwtAuthenticationFilter authenticationFilter;
-	
+
 	@Autowired
 	private AuthEntryPoint authEntryPoint;
-	
-	  @Bean
-	    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-	        http
-	            .cors() 
-	            .and()
-	            .csrf().disable() 
-	            .authorizeRequests(request -> request
-	                .requestMatchers(AUTHENTICATE, REGISTER).permitAll() 
-	                .requestMatchers(SWAGGER_PATHS).permitAll()
-	                .requestMatchers(ALLOWED_PATHS).permitAll()
-	                .anyRequest().authenticated() 
-	            )
-	            .sessionManagement(session -> session
-	                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) 
-	            )
-	            .authenticationProvider(authenticationProvider) 
-	            .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class) 
-	            .exceptionHandling(exception -> exception
-	                .authenticationEntryPoint(authEntryPoint) 
-	            );
 
-	        return http.build();
-	    }
-	
-	 @Bean
-	    public WebMvcConfigurer corsConfigurer() {
-	        return new WebMvcConfigurer() {
-	            @Override
-	            public void addCorsMappings(CorsRegistry registry) {
-	                registry.addMapping("/**")
-	                        .allowedOrigins("http://localhost:5173","http://localhost:5174")  
-	                        .allowedMethods("GET", "POST", "PUT", "DELETE")  
-	                        .allowedHeaders("*")  
-	                        .allowCredentials(true);  
-	            }
-	        };
-	    }
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http.cors().and().csrf().disable()
+				.authorizeRequests(request -> request.requestMatchers(AUTHENTICATE, REGISTER).permitAll()
+						.requestMatchers(SWAGGER_PATHS).permitAll().requestMatchers(ALLOWED_PATHS).permitAll()
+						.anyRequest().authenticated())
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.authenticationProvider(authenticationProvider)
+				.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
+				.exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPoint));
+
+		return http.build();
+	}
+
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**").allowedOrigins("http://localhost:5173", "http://localhost:5174")
+						.allowedMethods("GET", "POST", "PUT", "DELETE").allowedHeaders("*").allowCredentials(true);
+			}
+		};
+	}
 }
