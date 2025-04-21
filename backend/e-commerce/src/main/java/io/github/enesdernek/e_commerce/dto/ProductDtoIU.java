@@ -35,9 +35,6 @@ public class ProductDtoIU {
 	
 	private String brand;	
 	
-	@PositiveOrZero
-	private int favCount;
-	
 	
 	private String imagePath;
 	

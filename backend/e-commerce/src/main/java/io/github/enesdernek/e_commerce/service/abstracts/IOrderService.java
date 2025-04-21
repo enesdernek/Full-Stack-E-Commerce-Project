@@ -11,8 +11,8 @@ public interface IOrderService {
 	
 	OrderDto add(String username ,OrderDtoIU orderDtoIU) throws BadRequestException;
 	
-	List<OrderDto>getAllByUserId(Long userId);
+	List<OrderDto>getAllByUsername(String username);
 	
-	OrderDto getByOrderId(Long orderId);
+	OrderDto getByOrderIdAndUsername(Long orderId,String username) throws BadRequestException;
 
 }

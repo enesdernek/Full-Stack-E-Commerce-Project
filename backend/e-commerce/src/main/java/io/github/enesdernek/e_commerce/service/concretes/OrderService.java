@@ -2,6 +2,7 @@ package io.github.enesdernek.e_commerce.service.concretes;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -143,15 +144,85 @@ public class OrderService implements IOrderService {
 
 
 	@Override
-	public List<OrderDto> getAllByUserId(Long userId) {
+	public List<OrderDto>getAllByUsername(String username) {
 		
-		return null;
+		User user = this.userRepository.findByUsername(username);
+		
+		List<Order>orders = user.getOrders();
+		
+		List<OrderDto>orderDtos = new ArrayList<>();
+		
+		for(Order order:orders) {
+			OrderDto orderDto = new OrderDto();
+			BeanUtils.copyProperties(order, orderDto);
+			
+			UserDto userDto = new UserDto();
+			BeanUtils.copyProperties(order.getUser(), userDto);
+			orderDto.setUserDto(userDto);
+			
+			List<OrderItemDto>orderItemDtos = new ArrayList<>();
+			
+			for(OrderItem orderItem:order.getOrderItems()) {
+				OrderItemDto orderItemDto = new OrderItemDto();
+				BeanUtils.copyProperties(orderItem, orderItemDto);
+				
+				ProductDto productDto = new ProductDto();
+				BeanUtils.copyProperties(orderItem.getProduct(), productDto);
+				
+				CategoryDto categoryDto = new CategoryDto();
+				BeanUtils.copyProperties(orderItem.getProduct().getCategory(), categoryDto);
+				productDto.setCategoryDto(categoryDto);
+				
+				orderItemDto.setProductDto(productDto);
+				
+				orderItemDtos.add(orderItemDto);
+			}
+			orderDto.setOrderItemDtos(orderItemDtos);
+			orderDtos.add(orderDto);
+		}
+		
+		orderDtos.sort(Comparator.comparing(OrderDto::getOrderId).reversed());
+		
+		return orderDtos;
 	}
 
 	@Override
-	public OrderDto getByOrderId(Long orderId) {
+	public OrderDto getByOrderIdAndUsername(Long orderId,String username) throws BadRequestException{
 		
-		return null;
+		Order order = this.orderRepository.findById(orderId).get();
+		
+		if(!order.getUser().getUsername().equals(username)) {
+			throw new BadRequestException("This order does not belong to this user: "+username);
+		}
+		
+		OrderDto orderDto = new OrderDto();
+		BeanUtils.copyProperties(order, orderDto);
+		
+		List<OrderItemDto>orderItemDtos = new ArrayList<>();
+		
+		for(OrderItem orderItem:order.getOrderItems()) {
+			OrderItemDto orderItemDto = new OrderItemDto();
+			BeanUtils.copyProperties(orderItem, orderItemDto);
+			
+			ProductDto productDto = new ProductDto();
+			BeanUtils.copyProperties(orderItem.getProduct(), productDto);
+			
+			CategoryDto categoryDto = new CategoryDto();
+			BeanUtils.copyProperties(orderItem.getProduct().getCategory(), categoryDto);
+			productDto.setCategoryDto(categoryDto);
+			
+			orderItemDto.setProductDto(productDto);
+			
+			orderItemDtos.add(orderItemDto);
+		}
+		
+		UserDto userDto = new UserDto();
+		BeanUtils.copyProperties(order.getUser(), userDto);
+		orderDto.setUserDto(userDto);
+		
+		orderDto.setOrderItemDtos(orderItemDtos);
+		
+		return orderDto;
 	}
 
 }
