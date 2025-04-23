@@ -1,10 +1,11 @@
 import './App.css'
+import Home from './Pages/Home'
 
-function App() {
+export function App() {
 
   return (
     <>
-     <p>e-commerce</p>
+     <Home/>
     </>
   )
 }
