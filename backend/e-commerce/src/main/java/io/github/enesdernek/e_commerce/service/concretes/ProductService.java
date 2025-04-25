@@ -88,9 +88,11 @@ public class ProductService implements IProductService {
 		product.setCategory(category);
 
 		BigDecimal price = product.getPrice();
-		BigDecimal discount = BigDecimal.valueOf(product.getDiscount()); // yüzde örn: 10
+		BigDecimal discount = BigDecimal.valueOf(product.getDiscount());
 		BigDecimal discountedPrice = price.subtract(price.multiply(discount).divide(BigDecimal.valueOf(100)));
 		product.setDiscountedPrice(discountedPrice);
+		
+		product.setImagePath(productDtoIU.getImagePath());
 
 		this.productRepository.save(product);
 		ProductDto productDto = new ProductDto();
