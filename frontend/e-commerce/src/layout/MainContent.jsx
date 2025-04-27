@@ -1,7 +1,8 @@
-import { Box, Container, Grid } from '@mui/material'
+import { Box, Container} from '@mui/material'
 import React from 'react'
 import CategoryList from '../components/CategoryList'
 import ProductList from '../components/ProductList'
+import Grid from '@mui/material/Grid';
 
 export function MainContent() {
   return (

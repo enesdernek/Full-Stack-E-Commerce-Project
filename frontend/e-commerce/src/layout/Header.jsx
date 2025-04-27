@@ -12,7 +12,7 @@ import FormGroup from '@mui/material/FormGroup';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { Container, Grid } from '@mui/material';
+import { Container, Grid, TextField } from '@mui/material';
 
 export function Header() {
 
@@ -62,6 +62,10 @@ export function Header() {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               E-Commerce
             </Typography>
+            <TextField
+            sx={{backgroundColor:"white",marginRight:"40px",marginY:"10px"}}
+            id="outlined-basic" label="Ürün ara..." variant="outlined" />
+
             <ShoppingCartIcon />
             {auth && (
               <div>
@@ -72,6 +76,7 @@ export function Header() {
                   aria-haspopup="true"
                   onClick={handleMenu}
                   color="inherit"
+                  
                 >
                   <AccountCircle />
                 </IconButton>

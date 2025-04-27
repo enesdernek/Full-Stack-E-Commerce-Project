@@ -1,8 +1,55 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import ListSubheader from '@mui/material/ListSubheader';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import SendIcon from '@mui/icons-material/Send';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllCategories } from '../redux/slices/categorySlice';
+import Category from './Category';
+
 
 function CategoryList() {
+
+  const dispatch = useDispatch()
+  const categories = useSelector((state)=>state.category.categories)
+
+  useEffect(()=>{
+      dispatch(getAllCategories())
+  },[])
+
+
   return (
-    <div>CategoryList</div>
+    <List
+    sx={{
+      width: '95%',
+      maxWidth: 360,
+      bgcolor: 'background.paper',
+      border: "1px solid #ccc", 
+         
+    }}
+      component="nav"
+      aria-labelledby="nested-list-subheader"
+      subheader={
+        <ListSubheader 
+        sx={{
+          backgroundColor:"#f5f5f5",
+          fontWeight:"bold"
+        }}
+        component="div" id="nested-list-subheader">
+          Kategoriler
+        </ListSubheader>
+      }
+    >
+     {
+       categories && categories.map((category)=>(
+             <Category key={category.categoryId} category={category}/>
+       ))
+     }
+  
+      
+    </List>
   )
 }
 

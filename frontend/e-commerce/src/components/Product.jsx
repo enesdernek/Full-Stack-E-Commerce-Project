@@ -14,33 +14,62 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
-function Product({product}) {
+function Product({ product }) {
 
-    
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card
+      sx={{
+        width: "100%",
+        height: 300,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        bgcolor: 'background.paper',
+      border: "1px solid #ccc"
+        
+      }}
+    >
       <CardHeader
+        titleTypographyProps={{ variant: "h6" }}
         title={product.name}
+        sx={{
+          backgroundColor:"#f5f5f5"
+        }}
+
       />
+
       <CardMedia
         component="img"
-        height="194"
-        image={"/src"+product.imagePath}
-        alt="Paella dish"
+        image={"/src" + product.imagePath}
+        alt={product.name}
+        sx={{
+          height: 200,
+          width: 300,        // Resim yüksekliği sabit
+          objectFit: "cover",
+        }}
       />
-      <CardActions disableSpacing>
+
+      <CardActions
+        disableSpacing
+        sx={{
+          justifyContent: "space-between",
+          padding: "0 16px",
+           backgroundColor:"#f5f5f5"
+
+        }}
+      >
         <IconButton aria-label="add to favorites">
           <FavoriteIcon />
         </IconButton>
         <IconButton aria-label="share">
-          <ShareIcon />
+          <AddShoppingCartIcon/>
         </IconButton>
-       
       </CardActions>
-     
     </Card>
-  )
+  );
+
 }
 
 export default Product    

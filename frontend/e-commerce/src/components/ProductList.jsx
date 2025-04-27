@@ -15,13 +15,16 @@ function ProductList() {
 
 
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={1} alignItems="stretch"
+     
+    >
       {products && products.map((product) => (
-        <Grid item xs={12} sm={6} md={4} lg={3} key={product.productId}>
+        <Grid xs={12} sm={6} md={4} lg={3} key={product.productId}>
           <Product product={product} />
         </Grid>
       ))}
     </Grid>
+
   )
 }
 

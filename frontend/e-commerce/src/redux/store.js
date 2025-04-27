@@ -1,10 +1,12 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { persistStore, persistReducer } from "redux-persist"
 import storage from "redux-persist/lib/storage"
-import  productSlice  from './slices/productSlice'
+import productSlice from './slices/productSlice'
+import categorySlice from './slices/categorySlice'
 
 const rootReducer = combineReducers({
-    product:productSlice
+    product: productSlice,
+    category: categorySlice
 })
 
 const persistConfig = {
