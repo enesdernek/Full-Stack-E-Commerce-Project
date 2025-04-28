@@ -13,7 +13,7 @@ const persistConfig = {
     key: "root",
     storage,
     version: 1,
-    blacklist: [""]
+    blacklist: ["product"]
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

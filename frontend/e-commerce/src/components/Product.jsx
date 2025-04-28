@@ -46,7 +46,7 @@ function Product({ product }) {
         alt={product.name}
         sx={{
           height: 200,
-          width: 300,        // Resim yüksekliği sabit
+          width: 300,        
           objectFit: "cover",
         }}
       />
