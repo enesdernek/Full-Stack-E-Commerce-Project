@@ -1,19 +1,29 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAllProducts } from '../redux/slices/productSlice'
+import { filterProductsByCategoryId, getAllProducts } from '../redux/slices/productSlice'
 import Product from './Product'
 import Grid from '@mui/material/Grid';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import { Button } from '@mui/material';
 
-function ProductList() {
+function ProductList({ categoryId }) {
 
   const products = useSelector((state) => state.product.products)
   const dispatch = useDispatch()
   const [pageNo, setPageNo] = useState(1);
   const loading = useSelector((state) => state.product.loading)
   const [hasMore, setHasMore] = useState(true);
+
+  useEffect(() => {
+    setPageNo(1); 
+
+    if (categoryId) {
+      dispatch(filterProductsByCategoryId({ categoryId, pageNo}));
+    } else {
+      dispatch(getAllProducts(pageNo));
+    }
+  }, [categoryId, dispatch]);
 
 
   useEffect(() => {

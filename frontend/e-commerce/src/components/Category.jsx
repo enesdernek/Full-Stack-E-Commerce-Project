@@ -4,9 +4,13 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import SendIcon from '@mui/icons-material/Send';
 
-function Category({category}) {
+function Category({ category, onSelect }) {
+
+
+    
+
     return (
-        <ListItemButton>
+        <ListItemButton  onClick={() => onSelect(category.categoryId)}>
             <ListItemIcon>
                 <SendIcon />
             </ListItemIcon>

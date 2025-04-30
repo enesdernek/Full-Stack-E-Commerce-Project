@@ -10,14 +10,18 @@ import { getAllCategories } from '../redux/slices/categorySlice';
 import Category from './Category';
 
 
-function CategoryList() {
+function CategoryList({ onCategorySelect }) {
 
   const dispatch = useDispatch()
   const categories = useSelector((state)=>state.category.categories)
 
+
+
   useEffect(()=>{
       dispatch(getAllCategories())
   },[])
+
+  
 
 
   return (
@@ -42,9 +46,15 @@ function CategoryList() {
         </ListSubheader>
       }
     >
+      <ListItemButton  onClick={() => onCategorySelect(null)}>
+            <ListItemIcon>
+                <SendIcon />
+            </ListItemIcon>
+            <ListItemText primary="Bütün Ürünler"/>
+        </ListItemButton>
      {
        categories && categories.map((category)=>(
-             <Category key={category.categoryId} category={category}/>
+             <Category key={category.categoryId} category={category} onSelect={onCategorySelect}/>
        ))
      }
   
