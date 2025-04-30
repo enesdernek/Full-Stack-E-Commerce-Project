@@ -7,23 +7,13 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import { Button } from '@mui/material';
 
-function ProductList({ categoryId }) {
+function ProductList() {
 
   const products = useSelector((state) => state.product.products)
   const dispatch = useDispatch()
   const [pageNo, setPageNo] = useState(1);
   const loading = useSelector((state) => state.product.loading)
   const [hasMore, setHasMore] = useState(true);
-
-  useEffect(() => {
-    setPageNo(1); 
-
-    if (categoryId) {
-      dispatch(filterProductsByCategoryId({ categoryId, pageNo}));
-    } else {
-      dispatch(getAllProducts(pageNo));
-    }
-  }, [categoryId, dispatch]);
 
 
   useEffect(() => {

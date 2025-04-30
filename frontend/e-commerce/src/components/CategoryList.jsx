@@ -8,12 +8,14 @@ import SendIcon from '@mui/icons-material/Send';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllCategories } from '../redux/slices/categorySlice';
 import Category from './Category';
+import { useNavigate } from 'react-router-dom';
 
 
-function CategoryList({ onCategorySelect }) {
+function CategoryList() {
 
   const dispatch = useDispatch()
   const categories = useSelector((state)=>state.category.categories)
+  const navigate = useNavigate()
 
 
 
@@ -46,7 +48,7 @@ function CategoryList({ onCategorySelect }) {
         </ListSubheader>
       }
     >
-      <ListItemButton  onClick={() => onCategorySelect(null)}>
+      <ListItemButton onClick={()=>navigate("/products")} >
             <ListItemIcon>
                 <SendIcon />
             </ListItemIcon>
@@ -54,7 +56,7 @@ function CategoryList({ onCategorySelect }) {
         </ListItemButton>
      {
        categories && categories.map((category)=>(
-             <Category key={category.categoryId} category={category} onSelect={onCategorySelect}/>
+             <Category key={category.categoryId} category={category}/>
        ))
      }
   
