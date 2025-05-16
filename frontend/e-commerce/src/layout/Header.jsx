@@ -10,11 +10,14 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Container, Grid, TextField } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import "../style/header.css"
 
 export function Header() {
 
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const navigate = useNavigate()
 
   const handleChange = (event) => {
     setAuth(event.target.checked);
@@ -35,19 +38,8 @@ export function Header() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Container maxWidth="xl">
-          <Grid container spacing={2}>
-            <Grid size={2}>
-
-            </Grid>
-            <Grid size={8}>
-
-            </Grid>
-            <Grid size={2}>
-
-            </Grid>
-          </Grid>
           <Toolbar >
-            <IconButton
+            <IconButton onClick={()=>navigate("/products")}
               size="large"
               edge="start"
               color="inherit"
@@ -55,13 +47,16 @@ export function Header() {
               sx={{ mr: 2 }}
             >
               <StorefrontIcon />
+              
             </IconButton>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              E-Commerce
-            </Typography>
+
+            <Typography onClick={()=>navigate("/products")} variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                <span id="header-text">E-Commerce</span>
+              </Typography>
+           
             <TextField
-            sx={{backgroundColor:"white",marginRight:"40px",marginY:"10px"}}
-            id="outlined-basic" label="Ürün ara..." variant="outlined" />
+              sx={{ backgroundColor: "white", marginRight: "40px", marginY: "10px" }}
+              id="outlined-basic" label="Ürün ara..." variant="outlined" />
 
             <ShoppingCartIcon />
             {auth && (
@@ -73,7 +68,7 @@ export function Header() {
                   aria-haspopup="true"
                   onClick={handleMenu}
                   color="inherit"
-                  
+
                 >
                   <AccountCircle />
                 </IconButton>

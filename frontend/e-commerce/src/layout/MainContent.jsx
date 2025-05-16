@@ -3,12 +3,13 @@ import React, { useState } from 'react'
 import CategoryList from '../components/CategoryList'
 import ProductList from '../components/ProductList'
 import Grid from '@mui/material/Grid';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useParams } from 'react-router-dom';
 import ProductListFilteredByCategory from '../components/ProductListFilteredByCategory';
+import Register from '../Pages/Register';
+import Login from '../Pages/Login';
 
 export function MainContent() {
-
-
+  const { categoryId } = useParams();
 
   return (
     <Container maxWidth="xl" sx={{ marginTop: "20px" }}>
@@ -17,19 +18,15 @@ export function MainContent() {
           <CategoryList />
         </Grid>
         <Grid size={10}>
-          <Routes>
-          <Route path="/products" element={<ProductList />} />
-          <Route path="/" element={<ProductList />} />
-          <Route path="/products/:categoryId" element={<ProductListFilteredByCategory />} />
-          </Routes>
+          {categoryId ? (
+            <ProductListFilteredByCategory categoryId={categoryId} />
+          ) : (
+            <ProductList />
+          )}
         </Grid>
-
-
       </Grid>
-
-
     </Container>
-  )
+  );
 }
 
 export default MainContent
