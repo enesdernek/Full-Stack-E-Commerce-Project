@@ -108,8 +108,6 @@ public class UserService implements IUserService {
 
 		user.setUsername(userDtoIU.getUsername());
 
-		user.setEmail(userDtoIU.getEmail());
-
 		user.setPassword(passwordEncoder.encode(userDtoIU.getPassword()));
 
 		Cart cart = new Cart();

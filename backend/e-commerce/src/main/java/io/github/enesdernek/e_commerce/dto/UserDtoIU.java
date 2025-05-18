@@ -1,6 +1,5 @@
 package io.github.enesdernek.e_commerce.dto;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -17,11 +16,6 @@ public class UserDtoIU {
 	@NotBlank
 	@Size(min=3,max=18)
 	private String username;
-	
-	@NotNull
-	@NotBlank
-	@Email
-	private String email;
     
 	@NotNull
 	@NotBlank
