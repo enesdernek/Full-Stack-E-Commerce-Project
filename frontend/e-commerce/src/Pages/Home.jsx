@@ -6,6 +6,9 @@ import { Routes, Route } from "react-router-dom"
 import Register from './Register'
 import Login from './Login'
 
+
+
+
 export function Home() {
    return (
     <>

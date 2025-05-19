@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useSyncExternalStore } from 'react'
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -9,15 +9,22 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { Container, Grid, TextField } from '@mui/material';
+import { Button, Container, Grid, Icon, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import "../style/header.css"
+import Badge from '@mui/material/Badge';
+import { useDispatch, useSelector } from "react-redux"
+import { logOut } from '../redux/slices/userSlice';
+import { styled } from '@mui/material/styles';
+
 
 export function Header() {
 
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const user = useSelector((state) => state.user.user)
 
   const handleChange = (event) => {
     setAuth(event.target.checked);
@@ -31,6 +38,21 @@ export function Header() {
     setAnchorEl(null);
   };
 
+  const logOutFunc = () => {
+    dispatch(logOut())
+    handleClose()
+    navigate("/login")
+  }
+
+  const StyledBadge = styled(Badge)(({ theme }) => ({
+  '& .MuiBadge-badge': {
+    right: -3,
+    top: 13,
+    border: `2px solid ${(theme.vars ?? theme).palette.background.paper}`,
+    padding: '0 4px',
+  },
+}));
+
   return (
 
 
@@ -39,7 +61,7 @@ export function Header() {
       <AppBar position="static">
         <Container maxWidth="xl">
           <Toolbar >
-            <IconButton onClick={()=>navigate("/products")}
+            <IconButton onClick={() => navigate("/products")}
               size="large"
               edge="start"
               color="inherit"
@@ -47,51 +69,63 @@ export function Header() {
               sx={{ mr: 2 }}
             >
               <StorefrontIcon />
-              
+
             </IconButton>
 
-            <Typography onClick={()=>navigate("/products")} variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                <span id="header-text">E-Commerce</span>
-              </Typography>
-           
+            <Typography onClick={() => navigate("/products")} variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              <span id="header-text">E-Commerce</span>
+            </Typography>
+
             <TextField
               sx={{ backgroundColor: "white", marginRight: "40px", marginY: "10px" }}
               id="outlined-basic" label="Ürün ara..." variant="outlined" />
 
-            <ShoppingCartIcon />
-            {auth && (
-              <div>
-                <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={handleMenu}
-                  color="inherit"
+            <IconButton aria-label="cart">
+              <StyledBadge badgeContent={4} color="secondary">
+                <ShoppingCartIcon sx={{color:"white"}} />
+              </StyledBadge>
+            </IconButton>
 
-                >
-                  <AccountCircle />
-                </IconButton>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose}
-                >
-                  <MenuItem onClick={handleClose}>Profile</MenuItem>
-                  <MenuItem onClick={handleClose}>My account</MenuItem>
-                </Menu>
-              </div>
-            )}
+            {
+              user && user ?
+                <div>
+                  <IconButton
+                    size="large"
+                    aria-label="account of current user"
+                    aria-controls="menu-appbar"
+                    aria-haspopup="true"
+                    onClick={handleMenu}
+                    color="inherit"
+
+                  >
+                    <AccountCircle />
+                  </IconButton>
+                  <Menu
+                    id="menu-appbar"
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                  >
+                    <MenuItem onClick={handleClose}>Profile</MenuItem>
+                    <MenuItem onClick={handleClose}>My Orders</MenuItem>
+                    <MenuItem onClick={() => logOutFunc()}>Log Out</MenuItem>
+                  </Menu>
+                </div>
+                :
+                <Button onClick={() => navigate("/login")} sx={{ marginLeft: "16px" }} variant="contained" color="warning">Log In</Button>
+
+            }
+
+
           </Toolbar>
         </Container>
       </AppBar>

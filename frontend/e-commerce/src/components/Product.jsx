@@ -15,6 +15,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import { Chip } from '@mui/material';
 
 function Product({ product }) {
 
@@ -27,15 +28,15 @@ function Product({ product }) {
         flexDirection: "column",
         justifyContent: "space-between",
         bgcolor: 'background.paper',
-      border: "1px solid #ccc"
-        
+        border: "1px solid #ccc"
+
       }}
     >
       <CardHeader
         titleTypographyProps={{ variant: "h6" }}
         title={product.name}
         sx={{
-          backgroundColor:"#f5f5f5"
+          backgroundColor: "#f5f5f5"
         }}
 
       />
@@ -46,7 +47,7 @@ function Product({ product }) {
         alt={product.name}
         sx={{
           height: 200,
-          width: 300,        
+          width: 300,
           objectFit: "cover",
         }}
       />
@@ -55,16 +56,17 @@ function Product({ product }) {
         disableSpacing
         sx={{
           justifyContent: "space-between",
-          padding: "0 16px",
-           backgroundColor:"#f5f5f5"
+          padding: "0px 2px",
+          backgroundColor: "#f5f5f5",
+         
 
         }}
       >
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
+
+        <Chip sx={{marginBottom:"2px",fontWeight:"bold",fontSize:"16px",backgroundColor:"#F5F5F5"}} label={`${product.price + " ₺"}`} />
+
         <IconButton aria-label="share">
-          <AddShoppingCartIcon/>
+          <AddShoppingCartIcon />
         </IconButton>
       </CardActions>
     </Card>

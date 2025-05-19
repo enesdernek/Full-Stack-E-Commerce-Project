@@ -32,7 +32,8 @@ public class UserController {
 	private UserService userService;
 	
 	@PostMapping("/authenticate")
-	public ResponseEntity<AuthResponse> authenticate(@RequestBody @Valid UserDtoAuthIU userDtoAuthIU) {
+	public ResponseEntity<AuthResponse> authenticate(@RequestBody @Valid UserDtoAuthIU userDtoAuthIU) throws InterruptedException {
+		Thread.sleep(500);
 		return new ResponseEntity<>(this.userService.authenticate(userDtoAuthIU),HttpStatus.OK);
 	}
 	

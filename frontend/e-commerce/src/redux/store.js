@@ -3,10 +3,12 @@ import { persistStore, persistReducer } from "redux-persist"
 import storage from "redux-persist/lib/storage"
 import productSlice from './slices/productSlice'
 import categorySlice from './slices/categorySlice'
+import  userSlice  from './slices/userSlice'
 
 const rootReducer = combineReducers({
     product: productSlice,
-    category: categorySlice
+    category: categorySlice,
+    user:userSlice
 })
 
 const persistConfig = {

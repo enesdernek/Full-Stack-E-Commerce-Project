@@ -12,7 +12,7 @@ const BASIC_PATH = "http://localhost:8080/users"
 export const register = createAsyncThunk(
     'user/register',
     async (body) => {
-        const response = await axios.post(BASIC_PATH + "/register",body)
+        const response = await axios.post(BASIC_PATH + "/register", body)
         return response.data
     }
 
@@ -20,8 +20,8 @@ export const register = createAsyncThunk(
 
 export const authenticate = createAsyncThunk(
     'user/authenticate',
-    async () => {
-        const response = await axios.post(BASIC_PATH + "/authenticate")
+    async (body) => {
+        const response = await axios.post(BASIC_PATH + "/authenticate", body)
         return response.data
     }
 
@@ -31,10 +31,10 @@ export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-         logOut:(state)=>[
-            state.user=null,
-            state.token = null
-         ]
+        logOut: (state) => {
+            state.user = null,
+                state.token = null
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(register.fulfilled, (state, action) => {
@@ -49,17 +49,17 @@ export const userSlice = createSlice({
         builder.addCase(authenticate.fulfilled, (state, action) => {
             state.user = action.payload.userDto
             state.token = action.payload.token
-            state.loading=false
+            state.loading = false
         })
         builder.addCase(authenticate.pending, (state, action) => {
             state.loading = true
         })
-        builder.addCase(register.rejected, (state, action) => {
+        builder.addCase(authenticate.rejected, (state, action) => {
             state.loading = false
         })
     }
 })
 
-export const { } = userSlice.actions
+export const { logOut } = userSlice.actions
 
 export default userSlice.reducer
