@@ -44,6 +44,11 @@ export function Header() {
     navigate("/login")
   }
 
+  const navigateToProfile=()=>{
+       navigate("/profile")
+       handleClose()
+  }
+
   const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
     right: -3,
@@ -115,8 +120,8 @@ export function Header() {
                     open={Boolean(anchorEl)}
                     onClose={handleClose}
                   >
-                    <MenuItem onClick={handleClose}>Profile</MenuItem>
-                    <MenuItem onClick={handleClose}>My Orders</MenuItem>
+                    <MenuItem onClick={()=>navigateToProfile()}>Profile</MenuItem>
+                    <MenuItem onClick={handleClose} >My Orders</MenuItem>
                     <MenuItem onClick={() => logOutFunc()}>Log Out</MenuItem>
                   </Menu>
                 </div>

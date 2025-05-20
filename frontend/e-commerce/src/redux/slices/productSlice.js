@@ -21,7 +21,6 @@ export const getAllProducts = createAsyncThunk(
 export const filterProductsByCategoryId = createAsyncThunk(
     'products/filterProductsByCategoryId',
     async ({ categoryId, pageNo }) => {
-        console.log(categoryId,pageNo)
         const response = await axios.get(BASIC_PATH + `/get-all-by-categoryId?categoryId=${categoryId}&pageNo=${pageNo}&pageSize=12`)
        
         return response.data

@@ -15,7 +15,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import { Chip } from '@mui/material';
+import { Box, Chip } from '@mui/material';
 
 function Product({ product }) {
 
@@ -58,12 +58,44 @@ function Product({ product }) {
           justifyContent: "space-between",
           padding: "0px 2px",
           backgroundColor: "#f5f5f5",
-         
+
 
         }}
       >
 
-        <Chip sx={{marginBottom:"2px",fontWeight:"bold",fontSize:"16px",backgroundColor:"#F5F5F5"}} label={`${product.price + " ₺"}`} />
+        {product.discount > 0 ? (
+          <Box sx={{ display: "flex", alignItems: "center", gap: "0px" }}>
+            <Typography
+              sx={{
+                textDecoration: "line-through",
+                color: "gray",
+                fontSize: "14px",
+                fontWeight: "normal",
+              }}
+            >
+              {product.price} ₺
+            </Typography>
+            <Chip
+              sx={{
+                marginBottom: "2px",
+                fontWeight: "bold",
+                fontSize: "16px",
+                backgroundColor: "#F5F5F5",
+              }}
+              label={`${product.discountedPrice} ₺`}
+            />
+          </Box>
+        ) : (
+          <Chip
+            sx={{
+              marginBottom: "2px",
+              fontWeight: "bold",
+              fontSize: "16px",
+              backgroundColor: "#F5F5F5",
+            }}
+            label={`${product.price} ₺`}
+          />
+        )}
 
         <IconButton aria-label="share">
           <AddShoppingCartIcon />

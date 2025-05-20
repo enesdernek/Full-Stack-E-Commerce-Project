@@ -28,6 +28,8 @@ public class ProductDto {
 	
 	private BigDecimal price;
 	
+	private BigDecimal discountedPrice;
+	
 	
 	private int stockQuantity;
 	
