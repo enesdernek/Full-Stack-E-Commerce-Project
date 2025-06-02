@@ -6,10 +6,13 @@ import Grid from '@mui/material/Grid';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import { useNavigate, useParams } from 'react-router-dom';
+import { setProductListBarHeader } from '../redux/slices/appSlice';
+import { getCategoryById } from '../redux/slices/categorySlice';
 
 function ProductListFilteredByCategory() {
 
     const categorizedProducts = useSelector((state) => state.product.categorizedProducts)
+    const category = useSelector((state)=>state.category.category)
     const dispatch = useDispatch()
     const [pageNo, setPageNo] = useState(1);
     const loading = useSelector((state) => state.product.loading)
@@ -34,9 +37,17 @@ function ProductListFilteredByCategory() {
       fetchProducts();
     }, [pageNo, dispatch,categoryId]);
 
+    useEffect(()=>{
+      dispatch(getCategoryById(categoryId))
+    },[navigate])
+
+    useEffect(()=>{
+           dispatch(setProductListBarHeader(category.name))   
+    },[category])
+
     useEffect(() => {
       setPageNo(1);       
-      setHasMore(true);    
+      setHasMore(true);
     }, [categoryId]);
   
     useEffect(() => {
@@ -55,9 +66,9 @@ function ProductListFilteredByCategory() {
     }, [hasMore, loading]);
   
     return (
-      <Grid container spacing={1} alignItems="stretch">
+      <Grid sx={{marginTop:"20px"}} container spacing={3} alignItems="stretch">
         {categorizedProducts && categorizedProducts.map((categorizedProduct) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={categorizedProduct.productId}>
+          <Grid item size={{xs:12,sm:6,md:4,lg:4}} key={categorizedProduct.productId}>
             <Product product={categorizedProduct} />
           </Grid>
         ))}

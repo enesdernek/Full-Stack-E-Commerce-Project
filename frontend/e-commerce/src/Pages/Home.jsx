@@ -6,6 +6,8 @@ import { Routes, Route } from "react-router-dom"
 import Register from './Register'
 import Login from './Login'
 import Profile from './Profile'
+import Product from '../components/Product'
+import ProductPage from './ProductPage'
 
 
 
@@ -21,6 +23,7 @@ export function Home() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/product/:productId" element={<ProductPage />} />
       </Routes>
     </>
   );

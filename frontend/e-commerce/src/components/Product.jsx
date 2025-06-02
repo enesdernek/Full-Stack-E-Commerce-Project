@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -16,14 +16,17 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { Box, Chip } from '@mui/material';
+import { useNavigate } from "react-router-dom"
 
 function Product({ product }) {
+
+  const navigate = useNavigate()
 
   return (
     <Card
       sx={{
         width: "100%",
-        height: 300,
+        height: 353,
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
@@ -33,22 +36,31 @@ function Product({ product }) {
       }}
     >
       <CardHeader
+        onClick={() => navigate(`/product/${product.productId}`)}
         titleTypographyProps={{ variant: "h6" }}
         title={product.name}
         sx={{
-          backgroundColor: "#f5f5f5"
+          backgroundColor: "#f5f5f5",
+          "&:hover": {
+            backgroundColor: "#f5f5f5	",
+            cursor: "pointer"
+          }
         }}
 
       />
 
       <CardMedia
+        onClick={() => navigate(`/product/${product.productId}`)}
         component="img"
         image={"/src" + product.imagePath}
         alt={product.name}
         sx={{
-          height: 200,
-          width: 300,
+          height: 250,
+          width: 420,
           objectFit: "cover",
+          "&:hover": {
+            cursor: "pointer"
+          }
         }}
       />
 

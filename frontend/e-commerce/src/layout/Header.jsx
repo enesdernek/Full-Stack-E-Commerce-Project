@@ -18,6 +18,7 @@ import { logOut } from '../redux/slices/userSlice';
 import { styled } from '@mui/material/styles';
 
 
+
 export function Header() {
 
   const [auth, setAuth] = React.useState(true);
@@ -25,6 +26,7 @@ export function Header() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.user)
+
 
   const handleChange = (event) => {
     setAuth(event.target.checked);
@@ -44,19 +46,19 @@ export function Header() {
     navigate("/login")
   }
 
-  const navigateToProfile=()=>{
-       navigate("/profile")
-       handleClose()
+  const navigateToProfile = () => {
+    navigate("/profile")
+    handleClose()
   }
 
   const StyledBadge = styled(Badge)(({ theme }) => ({
-  '& .MuiBadge-badge': {
-    right: -3,
-    top: 13,
-    border: `2px solid ${(theme.vars ?? theme).palette.background.paper}`,
-    padding: '0 4px',
-  },
-}));
+    '& .MuiBadge-badge': {
+      right: -3,
+      top: 13,
+      border: `2px solid ${(theme.vars ?? theme).palette.background.paper}`,
+      padding: '0 4px',
+    },
+  }));
 
   return (
 
@@ -87,7 +89,7 @@ export function Header() {
 
             <IconButton aria-label="cart">
               <StyledBadge badgeContent={4} color="secondary">
-                <ShoppingCartIcon sx={{color:"white"}} />
+                <ShoppingCartIcon sx={{ color: "white" }} />
               </StyledBadge>
             </IconButton>
 
@@ -120,13 +122,13 @@ export function Header() {
                     open={Boolean(anchorEl)}
                     onClose={handleClose}
                   >
-                    <MenuItem onClick={()=>navigateToProfile()}>Profile</MenuItem>
-                    <MenuItem onClick={handleClose} >My Orders</MenuItem>
-                    <MenuItem onClick={() => logOutFunc()}>Log Out</MenuItem>
+                    <MenuItem onClick={() => navigateToProfile()}>Profil</MenuItem>
+                    <MenuItem onClick={handleClose} >Siparişlerim</MenuItem>
+                    <MenuItem onClick={() => logOutFunc()}>Çıkış Yap</MenuItem>
                   </Menu>
                 </div>
                 :
-                <Button onClick={() => navigate("/login")} sx={{ marginLeft: "16px" }} variant="contained" color="warning">Log In</Button>
+                <Button onClick={() => navigate("/login")} sx={{ marginLeft: "16px" }} variant="contained" color="warning">Giriş Yap</Button>
 
             }
 

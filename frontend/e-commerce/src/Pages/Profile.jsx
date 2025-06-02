@@ -26,7 +26,7 @@ function Profile() {
                 <AccountCircleIcon sx={{ fontSize: "40px" }} />
                 <Typography variant="h4" sx={{ fontWeight: "bold", color: "#333" }}>
 
-                    Welcome
+                    Hoş geldiniz
                     {
                         user && " " + user.username
                     }
@@ -47,7 +47,7 @@ function Profile() {
                 }}>
                     <FavoriteIcon sx={{ fontSize: "100px", color: "#E63946" }} />
                     <Typography sx={{ color: "white" }} variant='h5'>
-                        Favorited Products
+                        Beğendiğim Ürünler
                     </Typography>
                 </Box>
                 <Box sx={{
@@ -62,7 +62,7 @@ function Profile() {
                 }}>
                     <FeaturedPlayListIcon sx={{ fontSize: "100px", color: "#A9D6E5" }} />
                     <Typography sx={{ color: "white" }} variant='h5'>
-                        Orders
+                        Siparişlerim
                     </Typography>
                 </Box>
                 <Box sx={{
@@ -77,7 +77,7 @@ function Profile() {
                 }}>
                     <MiscellaneousServicesIcon sx={{ fontSize: "100px", color: "white" }} />
                     <Typography sx={{ color: "white" }} variant='h5'>
-                        User Settings
+                        Kullanıcı Ayarları
                     </Typography>
                 </Box>
             </Box>

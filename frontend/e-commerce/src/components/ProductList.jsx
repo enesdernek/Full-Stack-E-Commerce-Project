@@ -6,6 +6,7 @@ import Grid from '@mui/material/Grid';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import { Button } from '@mui/material';
+import { setProductListBarHeader } from '../redux/slices/appSlice';
 
 function ProductList() {
 
@@ -14,6 +15,11 @@ function ProductList() {
   const [pageNo, setPageNo] = useState(1);
   const loading = useSelector((state) => state.product.loading)
   const [hasMore, setHasMore] = useState(true);
+  
+
+  useEffect(()=>{
+     dispatch(setProductListBarHeader("Tüm Ürünler"))
+  },[])
 
 
   useEffect(() => {
@@ -49,9 +55,9 @@ function ProductList() {
   }, [hasMore, loading]);
 
   return (
-    <Grid container spacing={1} alignItems="stretch">
+    <Grid sx={{marginTop:"20px"}} container spacing={3} alignItems="stretch">
       {products && products.map((product) => (
-        <Grid item xs={12} sm={6} md={4} lg={3} key={product.productId}>
+        <Grid item size={{xs:12,sm:6,md:4,lg:4}} key={product.productId}>
           <Product product={product} />
         </Grid>
       ))}

@@ -7,6 +7,7 @@ import { Route, Routes, useParams } from 'react-router-dom';
 import ProductListFilteredByCategory from '../components/ProductListFilteredByCategory';
 import Register from '../Pages/Register';
 import Login from '../Pages/Login';
+import ProductListBar from '../components/ProductListBar';
 
 export function MainContent() {
   const { categoryId } = useParams();
@@ -17,9 +18,12 @@ export function MainContent() {
         <Grid size={2}>
           <CategoryList />
         </Grid>
+        
         <Grid size={10}>
+                <ProductListBar />
+
           {categoryId ? (
-            <ProductListFilteredByCategory categoryId={categoryId} />
+            <ProductListFilteredByCategory  categoryId={categoryId} />
           ) : (
             <ProductList />
           )}

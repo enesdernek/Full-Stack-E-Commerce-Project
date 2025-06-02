@@ -3,6 +3,7 @@ import axios from "axios"
 
 const initialState = {
     products: [],
+    product:null,
     categorizedProducts:[],
     loading: false
 }
@@ -13,6 +14,15 @@ export const getAllProducts = createAsyncThunk(
     'products/getAll',
     async (pageNo) => {
         const response = await axios.get(BASIC_PATH + `/paged?pageNo=${pageNo}&pageSize=12`)
+        return response.data
+    }
+
+)
+
+export const getProductByProductId = createAsyncThunk(
+    'products/getProductById',
+    async (productId) => {
+        const response = await axios.get(BASIC_PATH + `/${productId}`)
         return response.data
     }
 
@@ -73,6 +83,16 @@ export const productSlice = createSlice({
             state.loading = false;
         })
         builder.addCase(filterProductsByCategoryId.rejected, (state) => {
+            state.loading = false;
+        })
+        builder.addCase(getProductByProductId.rejected, (state) => {
+            state.loading = false;
+        })
+        builder.addCase(getProductByProductId.pending, (state) => {
+            state.loading = true;
+        })
+        builder.addCase(getProductByProductId.fulfilled, (state,action) => {
+            state.product = action.payload
             state.loading = false;
         })
     }

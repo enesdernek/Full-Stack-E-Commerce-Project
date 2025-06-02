@@ -75,11 +75,11 @@ function Login() {
                             variant="h4"
                             sx={{ fontWeight: "bold", marginBottom: "20px", color: "primary.main" }}
                         >
-                            LOG IN
+                            Giriş Yap
                         </Typography>
                         <TextField
                             id="username"
-                            label="Username"
+                            label="Kullanıcı Adı"
                             name="username"
                             variant="outlined"
                             onChange={formik.handleChange}
@@ -97,7 +97,7 @@ function Login() {
 
                         <TextField
                             id="password"
-                            label="Password"
+                            label="Şifre"
                             type="password"
                             variant="outlined"
                             name="password"
@@ -123,7 +123,7 @@ function Login() {
                             {
                                 loading ? 
                                 <CircularProgress/> :
-                                <span>Log In</span>
+                                <span>Giriş Yap</span>
                             }
                             
                         </Button>
@@ -139,7 +139,7 @@ function Login() {
                             }}
                             gutterBottom
                         >
-                            Don't you have an account ? Click here to register
+                            Hesabınız yok mu ? Oluşturmak için tıklayın.
                         </Typography>
 
                     </Box>

@@ -74,12 +74,12 @@ function Register() {
                             variant="h4"
                             sx={{ fontWeight: "bold", marginBottom: "20px", color: "primary.main" }}
                         >
-                            REGISTER
+                            Üye Ol
                         </Typography>
                         <TextField
                             id="username"
                             name="username"
-                            label="Username"
+                            label="Kullanıcı Adı"
                             variant="outlined"
                             sx={{
                                 width: {
@@ -100,7 +100,7 @@ function Register() {
                         <TextField
                             id="password"
                             name="password"
-                            label="Password"
+                            label="Şifre"
                             type="password"
                             variant="outlined"
                             sx={{
@@ -118,7 +118,7 @@ function Register() {
                         <TextField
                             id="passwordCheck"
                             name="passwordCheck"
-                            label="Verify Password"
+                            label="Şifreyi Onayla"
                             type="password"
                             variant="outlined"
                             sx={{
@@ -148,7 +148,7 @@ function Register() {
                                 error={formik.touched.passwordCheck && Boolean(formik.errors.term)}
                             />
                             <Typography variant="body2">
-                                I accept the terms
+                                Şartları kabul ediyorum
                             </Typography>
                             {formik.touched.term && formik.errors.term && (
                                 <FormHelperText sx={{marginLeft:"5px",marginTop:"5px"}} error>{formik.errors.term}</FormHelperText>
@@ -166,7 +166,7 @@ function Register() {
                                 paddingY: "10px"
                             }}
                         >
-                            REGISTER
+                            Üye Ol
                         </Button>
 
                         <Typography
@@ -180,7 +180,7 @@ function Register() {
                             }}
                             gutterBottom
                         >
-                            Do you have an account? Click here to log in
+                            Zaten bir hesabın var mı ? Giriş yapmak için tıklayın.
                         </Typography>
 
                     </Box>
