@@ -31,10 +31,14 @@ function ProductListBar() {
         setFilter("Filtre")
     }, [navigate])
 
+    useEffect(() => {
+        console.log(productListBarHeader)
+    }, [productListBarHeader])
+
     const handleSelectChange = (event) => {
         const selected = event.target.value;
         setFilter(selected);
-        dispatch(setProductListBarHeader("Fiyata Göre "+selected))
+        dispatch(setProductListBarHeader("Fiyata Göre " + selected))
         navigate(`/product/filtered-by-price/${selected}`);
     };
 
@@ -50,6 +54,8 @@ function ProductListBar() {
         setAnchorEl(null);
     };
 
+
+
     return (
         <Box sx={{ flexGrow: 1 }}>
 
@@ -64,27 +70,25 @@ function ProductListBar() {
                     </Typography>
 
                     {
-                        productListBarHeader && productListBarHeader === "Tüm Ürünler" || "Fiyata Göre Artan" || "Fiyata Göre Azalan" ? 
-
-                         <div>
-                        <FormControl variant="filled" sx={{ m: 1, minWidth: 120, backgroundColor: "white" }}>
-                            <InputLabel id="demo-simple-select-filled-label">Filtre</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-filled-label"
-                                id="demo-simple-select-filled"
-                                value={filter}
-                                onChange={handleSelectChange}
-                            >
-
-                                <MenuItem value={"Artan"}>Fiyata Göre Artan</MenuItem>
-                                <MenuItem value={"Azalan"}>Fiyata Göre Azalan</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </div>
-                    : <></>
+                        ["Tüm Ürünler", "Fiyata Göre Artan", "Fiyata Göre Azalan"].includes(productListBarHeader) ? (
+                            <div>
+                                <FormControl variant="filled" sx={{ m: 1, minWidth: 120,height:50, backgroundColor: "white" }}>
+                                    <InputLabel id="demo-simple-select-filled-label">Filtre</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-filled-label"
+                                        id="demo-simple-select-filled"
+                                        value={filter}
+                                        onChange={handleSelectChange}
+                                    >
+                                        <MenuItem value={"Artan"}>Fiyata Göre Artan</MenuItem>
+                                        <MenuItem value={"Azalan"}>Fiyata Göre Azalan</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </div>
+                        ) : null
                     }
 
-                   
+
 
                 </Toolbar>
             </AppBar>

@@ -9,6 +9,7 @@ import Register from '../Pages/Register';
 import Login from '../Pages/Login';
 import ProductListBar from '../components/ProductListBar';
 import ProductListFilteredByPrice from '../components/ProductListFilteredByPrice';
+import CampaignList from '../components/CampaignList';
 
 export function MainContent() {
   const { categoryId, filter } = useParams();
@@ -18,6 +19,7 @@ export function MainContent() {
       <Grid container>
         <Grid item size={{xs:12,sm:12,md:2,lg:2}}>
           <CategoryList />
+          <CampaignList/>
         </Grid>
 
         <Grid item size={{xs:12,sm:12,md:10,lg:10}}>

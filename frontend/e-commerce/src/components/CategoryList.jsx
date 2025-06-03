@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAllCategories } from '../redux/slices/categorySlice';
 import Category from './Category';
 import { useNavigate } from 'react-router-dom';
+import CategoryIcon from '@mui/icons-material/Category';
 
 
 function CategoryList() {
@@ -33,7 +34,7 @@ function CategoryList() {
       maxWidth: 360,
       bgcolor: 'background.paper',
       border: "1px solid #ccc", 
-         
+      color:"blue"  
     }}
       component="nav"
       aria-labelledby="nested-list-subheader"
@@ -50,7 +51,7 @@ function CategoryList() {
     >
       <ListItemButton onClick={()=>navigate("/products")} >
             <ListItemIcon>
-                <SendIcon />
+                <CategoryIcon sx={{color:"blue"}}/>
             </ListItemIcon>
             <ListItemText primary="Bütün Ürünler"/>
         </ListItemButton>

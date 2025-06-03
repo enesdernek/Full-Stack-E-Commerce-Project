@@ -9,6 +9,18 @@ const initialState = {
 
 const BASIC_PATH = "http://localhost:8080/users"
 
+export const getUser = createAsyncThunk(
+  'user/getUser',
+  async (token) => {
+    const response = await axios.get(`${BASIC_PATH}/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return response.data;
+  }
+);
+
 export const register = createAsyncThunk(
     'user/register',
     async (body) => {
@@ -26,6 +38,37 @@ export const authenticate = createAsyncThunk(
     }
 
 )
+
+export const addProductToFavoritedListByProductId = createAsyncThunk(
+    'user/addProductToFavoritedListByProductId',
+    async ({ token, productId }) => {
+        await axios.post(
+            `${BASIC_PATH}/add-product-to-favoriteds-list`,
+            null,
+            {
+                params: { productId },
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+    }
+);
+
+export const removeProductFromFavoritedListByProductId = createAsyncThunk(
+    'user/removeProductFromFavoritedListByProductId',
+    async ({ token, productId }) => {
+        await axios.delete(
+            `${BASIC_PATH}/delete-product-from-favoriteds-list`,
+            {
+                params: { productId },
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+    }
+);
 
 export const userSlice = createSlice({
     name: 'user',
@@ -57,6 +100,10 @@ export const userSlice = createSlice({
         builder.addCase(authenticate.rejected, (state, action) => {
             state.loading = false
         })
+        builder.addCase(getUser.fulfilled, (state, action) => {
+            state.user = action.payload
+        })
+
     }
 })
 

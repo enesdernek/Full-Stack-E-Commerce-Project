@@ -31,6 +31,12 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
+	@GetMapping("/me")
+	public ResponseEntity<UserDto> getCurrentUser(Authentication authentication){
+		String username = authentication.getName();
+		return new ResponseEntity<UserDto>(this.userService.getCurrentUser(username),HttpStatus.OK);
+	}
+	
 	@PostMapping("/authenticate")
 	public ResponseEntity<AuthResponse> authenticate(@RequestBody @Valid UserDtoAuthIU userDtoAuthIU) throws InterruptedException {
 		Thread.sleep(500);
@@ -63,7 +69,7 @@ public class UserController {
 		
 		String username = authentication.getName();
 		
-	    this.userService.deleteProductFromFavoriteListByUsernameAndProductId(username, productId); // Hatalı metoddan düzeltildi
+	    this.userService.deleteProductFromFavoriteListByUsernameAndProductId(username, productId); 
 	}
 	
 	@GetMapping("/favorited-products")

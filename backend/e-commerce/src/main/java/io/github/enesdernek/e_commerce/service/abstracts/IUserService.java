@@ -28,5 +28,7 @@ public interface IUserService {
     
     ProductDto rateProductByUsernameAndProductId(String username, Long orderId, Long productId,double rating);
     
+    UserDto getCurrentUser(String username);
+    
     
 }

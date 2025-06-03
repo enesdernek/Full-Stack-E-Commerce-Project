@@ -23,6 +23,7 @@ import io.github.enesdernek.e_commerce.exception.UsernameOrPasswordFalseExceptio
 import io.github.enesdernek.e_commerce.jwt.AuthResponse;
 import io.github.enesdernek.e_commerce.jwt.JwtService;
 import io.github.enesdernek.e_commerce.model.Cart;
+import io.github.enesdernek.e_commerce.model.Category;
 import io.github.enesdernek.e_commerce.model.Order;
 import io.github.enesdernek.e_commerce.model.OrderItem;
 import io.github.enesdernek.e_commerce.model.Product;
@@ -74,26 +75,48 @@ public class UserService implements IUserService {
 		}
 		return null;
 	}
+	
+	
 
 	public AuthResponse authenticate(UserDtoAuthIU userDtoAuthIU) {
-		try {
-			UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-					userDtoAuthIU.getUsername(), userDtoAuthIU.getPassword());
-			authenticationProvider.authenticate(auth);
+	    try {
+	        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+	                userDtoAuthIU.getUsername(), userDtoAuthIU.getPassword());
+	        authenticationProvider.authenticate(auth);
 
-			User user = userRepository.findByUsername(userDtoAuthIU.getUsername());
-			UserDto userDto = new UserDto();
-			BeanUtils.copyProperties(user, userDto);
-			String token = jwtService.generateToken(user);
+	        User user = userRepository.findByUsername(userDtoAuthIU.getUsername());
+	        UserDto userDto = new UserDto();
+	        BeanUtils.copyProperties(user, userDto);
+	        String token = jwtService.generateToken(user);
 
-			return new AuthResponse(userDto, token);
+	        // Favorited Products
+	        List<Product> favoritedProducts = user.getFavoritedProducts();
+	        List<ProductDto> favoritedProductDtos = new ArrayList<>();
 
-		} catch (Exception e) {
-			throw new UsernameOrPasswordFalseException("Username or password is incorrect.");
-		}
+	        if (favoritedProducts != null) {
+	            for (Product favoritedProduct : favoritedProducts) {
+	                ProductDto productDto = new ProductDto();
+	                BeanUtils.copyProperties(favoritedProduct, productDto);
 
+	                CategoryDto categoryDto = new CategoryDto();
+	                Category favoritedProductsCategory = favoritedProduct.getCategory();
+	                if (favoritedProductsCategory != null) {
+	                    BeanUtils.copyProperties(favoritedProductsCategory, categoryDto);
+	                    productDto.setCategoryDto(categoryDto);
+	                }
+
+	                favoritedProductDtos.add(productDto); // doğru listeye ekleme
+	            }
+	        }
+
+	        userDto.setFavoritedProductDtos(favoritedProductDtos);
+
+	        return new AuthResponse(userDto, token);
+
+	    } catch (Exception e) {
+	        throw new UsernameOrPasswordFalseException("Username or password is incorrect.");
+	    }
 	}
-
 	public UserDto register(UserDtoIU userDtoIU) throws BadRequestException {
 
 		List<User> users = this.userRepository.findAll();
@@ -121,7 +144,9 @@ public class UserService implements IUserService {
 		UserDto dtoUser = new UserDto();
 
 		BeanUtils.copyProperties(savedUser, dtoUser);
-
+		
+		
+		
 		return dtoUser;
 
 	}
@@ -262,6 +287,38 @@ public class UserService implements IUserService {
 	    
 	    return productDto;
 
+	}
+
+
+
+	@Override
+	public UserDto getCurrentUser(String username) {
+		User user  = this.userRepository.findByUsername(username);
+		UserDto userDto = new UserDto();
+		BeanUtils.copyProperties(user, userDto);
+		
+		 List<Product> favoritedProducts = user.getFavoritedProducts();
+	        List<ProductDto> favoritedProductDtos = new ArrayList<>();
+
+	        if (favoritedProducts != null) {
+	            for (Product favoritedProduct : favoritedProducts) {
+	                ProductDto productDto = new ProductDto();
+	                BeanUtils.copyProperties(favoritedProduct, productDto);
+
+	                CategoryDto categoryDto = new CategoryDto();
+	                Category favoritedProductsCategory = favoritedProduct.getCategory();
+	                if (favoritedProductsCategory != null) {
+	                    BeanUtils.copyProperties(favoritedProductsCategory, categoryDto);
+	                    productDto.setCategoryDto(categoryDto);
+	                }
+
+	                favoritedProductDtos.add(productDto); 
+	            }
+	        }
+
+	        userDto.setFavoritedProductDtos(favoritedProductDtos);
+		
+		return userDto;
 	}
 
 }
