@@ -44,6 +44,8 @@ public class ProductDto {
 	
 	private double rating; 
 	
+	private int ratingCount;
+	
 	private int totalRatingCount;
 		
 	private CategoryDto categoryDto;

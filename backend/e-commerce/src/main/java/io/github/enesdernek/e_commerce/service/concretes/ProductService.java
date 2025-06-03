@@ -17,8 +17,10 @@ import io.github.enesdernek.e_commerce.dto.ProductDtoIU;
 import io.github.enesdernek.e_commerce.exception.NotFoundException;
 import io.github.enesdernek.e_commerce.model.Category;
 import io.github.enesdernek.e_commerce.model.Product;
+import io.github.enesdernek.e_commerce.model.ProductRating;
 import io.github.enesdernek.e_commerce.model.User;
 import io.github.enesdernek.e_commerce.repository.CategoryRepository;
+import io.github.enesdernek.e_commerce.repository.ProductRatingRepository;
 import io.github.enesdernek.e_commerce.repository.ProductRepository;
 import io.github.enesdernek.e_commerce.service.abstracts.IProductService;
 import jakarta.transaction.Transactional;
@@ -31,6 +33,9 @@ public class ProductService implements IProductService {
 
 	@Autowired
 	private CategoryRepository categoryRepository;
+	
+	@Autowired
+	private ProductRatingRepository productRatingRepository;
 
 	public List<ProductDto> getAll() {
 
@@ -141,10 +146,19 @@ public class ProductService implements IProductService {
 		Product product = this.productRepository.findById(productId).get();
 		ProductDto productDto = new ProductDto();
 		BeanUtils.copyProperties(product, productDto);
+		
+		List<ProductRating> productRatings = this.productRatingRepository.getByProduct_ProductId(productId);
+		int productRatingCount = 0;
+		
+		for(ProductRating productRating:productRatings) {
+			productRatingCount++;
+		}
+		
 
 		Category category = product.getCategory();
 		CategoryDto categoryDto = new CategoryDto();
 		BeanUtils.copyProperties(category, categoryDto);
+		productDto.setRatingCount(productRatingCount);
 		productDto.setCategoryDto(categoryDto);
 
 		return productDto;

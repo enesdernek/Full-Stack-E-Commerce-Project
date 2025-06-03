@@ -11,26 +11,31 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { useNavigate } from 'react-router-dom';
+import { setProductListBarHeader } from '../redux/slices/appSlice';
 
 
 function ProductListBar() {
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const productListBarHeader = useSelector((state) => state.app.productListBarHeader)
-    const [filter,setFilter] = useState("Filtre")
+    const [filter, setFilter] = useState("Filtre")
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
-    useEffect(()=>{
-       setFilter("Filtre")
-    },[navigate])
+    useEffect(() => {
+        setFilter("Filtre")
+    }, [navigate])
 
     const handleSelectChange = (event) => {
-         setFilter(event.target.value)
+        const selected = event.target.value;
+        setFilter(selected);
+        dispatch(setProductListBarHeader("Fiyata Göre "+selected))
+        navigate(`/product/filtered-by-price/${selected}`);
     };
 
     const handleChange = (event) => {
@@ -58,8 +63,11 @@ function ProductListBar() {
 
                     </Typography>
 
-                    <div>
-                        <FormControl variant="filled" sx={{ m: 1, minWidth: 120,backgroundColor:"white" }}>
+                    {
+                        productListBarHeader && productListBarHeader === "Tüm Ürünler" || "Fiyata Göre Artan" || "Fiyata Göre Azalan" ? 
+
+                         <div>
+                        <FormControl variant="filled" sx={{ m: 1, minWidth: 120, backgroundColor: "white" }}>
                             <InputLabel id="demo-simple-select-filled-label">Filtre</InputLabel>
                             <Select
                                 labelId="demo-simple-select-filled-label"
@@ -67,12 +75,16 @@ function ProductListBar() {
                                 value={filter}
                                 onChange={handleSelectChange}
                             >
-                
-                                <MenuItem value={"artan"}>Fiyata Göre Artan</MenuItem>
-                                <MenuItem value={"azalan"}>Fiyata Göre Azalan</MenuItem>
+
+                                <MenuItem value={"Artan"}>Fiyata Göre Artan</MenuItem>
+                                <MenuItem value={"Azalan"}>Fiyata Göre Azalan</MenuItem>
                             </Select>
                         </FormControl>
                     </div>
+                    : <></>
+                    }
+
+                   
 
                 </Toolbar>
             </AppBar>

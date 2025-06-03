@@ -3,9 +3,10 @@ import axios from "axios"
 
 const initialState = {
     products: [],
-    product:null,
-    categorizedProducts:[],
-    loading: false
+    product: null,
+    categorizedProducts: [],
+    loading: false,
+    filteredProducts: []
 }
 
 const BASIC_PATH = "http://localhost:8080/products"
@@ -32,7 +33,25 @@ export const filterProductsByCategoryId = createAsyncThunk(
     'products/filterProductsByCategoryId',
     async ({ categoryId, pageNo }) => {
         const response = await axios.get(BASIC_PATH + `/get-all-by-categoryId?categoryId=${categoryId}&pageNo=${pageNo}&pageSize=12`)
-       
+
+        return response.data
+    }
+
+)
+
+export const filterProductsByPriceASC = createAsyncThunk(
+    'products/filterProductsByPriceASC',
+    async ({ pageNo }) => {
+        const response = await axios.get(BASIC_PATH + `/sorted-by-price-asc?pageNo=${pageNo}&pageSize=12`)
+        return response.data
+    }
+
+)
+
+export const filterProductsByPriceDESC = createAsyncThunk(
+    'products/filterProductsByPriceDESC',
+    async ({ pageNo }) => {
+        const response = await axios.get(BASIC_PATH + `/sorted-by-price-desc?pageNo=${pageNo}&pageSize=12`)
         return response.data
     }
 
@@ -42,7 +61,9 @@ export const productSlice = createSlice({
     name: 'product',
     initialState,
     reducers: {
-
+       clearFilteredProducts:(state)=>{
+           state.filteredProducts = []
+       }
     },
     extraReducers: (builder) => {
         builder.addCase(getAllProducts.fulfilled, (state, action) => {
@@ -60,19 +81,19 @@ export const productSlice = createSlice({
 
         builder.addCase(filterProductsByCategoryId.fulfilled, (state, action) => {
             const { pageNo } = action.meta.arg;
-          
+
             if (pageNo === 1) {
-              state.categorizedProducts = action.payload;
+                state.categorizedProducts = action.payload;
             } else {
-              const newProducts = action.payload.filter(newProduct =>
-                !state.categorizedProducts.some(existingProduct => existingProduct.productId === newProduct.productId)
-              );
-              state.categorizedProducts = [...state.categorizedProducts, ...newProducts];
+                const newProducts = action.payload.filter(newProduct =>
+                    !state.categorizedProducts.some(existingProduct => existingProduct.productId === newProduct.productId)
+                );
+                state.categorizedProducts = [...state.categorizedProducts, ...newProducts];
             }
-          
+
             state.loading = false;
-          });
-        
+        });
+
         builder.addCase(getAllProducts.pending, (state) => {
             state.loading = true
         })
@@ -91,13 +112,55 @@ export const productSlice = createSlice({
         builder.addCase(getProductByProductId.pending, (state) => {
             state.loading = true;
         })
-        builder.addCase(getProductByProductId.fulfilled, (state,action) => {
+        builder.addCase(getProductByProductId.fulfilled, (state, action) => {
             state.product = action.payload
             state.loading = false;
+        })
+        builder.addCase(filterProductsByPriceASC.fulfilled, (state, action) => {
+            const { pageNo } = action.meta.arg;
+            console.log(pageNo)
+
+            if (pageNo === 1) {
+                state.filteredProducts = action.payload;
+            } else {
+                const newProducts = action.payload.filter(newProduct =>
+                    !state.filteredProducts.some(existingProduct => existingProduct.productId === newProduct.productId)
+                );
+                state.filteredProducts = [...state.filteredProducts, ...newProducts];
+            }
+
+            state.loading = false;
+        });
+        builder.addCase(filterProductsByPriceASC.rejected, (state) => {
+            state.loading = false;
+        })
+        builder.addCase(filterProductsByPriceASC.pending, (state) => {
+            state.loading = true;
+        })
+        builder.addCase(filterProductsByPriceDESC.fulfilled, (state, action) => {
+            const { pageNo } = action.meta.arg;
+            console.log(pageNo)
+
+            if (pageNo === 1) {
+                state.filteredProducts = action.payload;
+            } else {
+                const newProducts = action.payload.filter(newProduct =>
+                    !state.filteredProducts.some(existingProduct => existingProduct.productId === newProduct.productId)
+                );
+                state.filteredProducts = [...state.filteredProducts, ...newProducts];
+            }
+
+            state.loading = false;
+        });
+        builder.addCase(filterProductsByPriceDESC.rejected, (state) => {
+            state.loading = false;
+        })
+        builder.addCase(filterProductsByPriceDESC.pending, (state) => {
+            state.loading = true;
         })
     }
 })
 
-export const { } = productSlice.actions
+export const { clearFilteredProducts} = productSlice.actions
 
 export default productSlice.reducer

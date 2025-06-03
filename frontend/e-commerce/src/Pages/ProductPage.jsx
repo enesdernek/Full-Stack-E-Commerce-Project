@@ -35,22 +35,26 @@ function ProductPage() {
                     </Grid>
                     <Grid size={{ xs: 12, md: 6 }}>
                         <Box>
-                            <Box sx={{ display: "flex",justifyContent:"space-between" }}>
+                            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                                 <Box>
                                     <Typography sx={{ color: "orange", marginLeft: "7px" }} variant="h4">{product.brand}</Typography>
                                     <Typography sx={{ marginLeft: "6px" }} variant="h4">{product.name}</Typography>
                                 </Box>
-                                <span>a</span>
-                                <Rating
-                                    name="simple-controlled"
-                                    value={1}
-                                    sx={{
-                                        fontSize: "36px"
-                                    }}
-                                    onChange={(event, newValue) => {
-                                        setValue(newValue);
-                                    }}
-                                />
+                                <Box sx={{display:"flex"}}>
+                                    <Typography sx={{marginTop:"8px",marginRight:"14px"}} variant='span'>Değerlendirme Sayısı: {product.ratingCount}</Typography>
+                                    <Rating
+                                        name="simple-controlled"
+                                        value={product.rating}
+                                        precision={0.5}
+                                        sx={{
+                                            fontSize: "30px"
+                                        }}
+                                        onChange={(event, newValue) => {
+                                            setValue(newValue);
+                                        }}
+                                    />
+                                </Box>
+
                             </Box>
                             <Typography sx={{ marginLeft: "8px", fontSize: "20px" }} variant="span">{product.description}</Typography>
                         </Box>

@@ -56,7 +56,6 @@ public class ProductController {
 	
 	@GetMapping("/paged")
 	public ResponseEntity<List<ProductDto>> getAllPaged(@RequestParam int pageNo,@RequestParam int pageSize) throws InterruptedException{
-		Thread.sleep(500);
 		return new ResponseEntity<List<ProductDto>>(this.productService.getAllPaged(pageNo,pageSize),HttpStatus.OK);
 	}
 	

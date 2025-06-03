@@ -8,22 +8,25 @@ import ProductListFilteredByCategory from '../components/ProductListFilteredByCa
 import Register from '../Pages/Register';
 import Login from '../Pages/Login';
 import ProductListBar from '../components/ProductListBar';
+import ProductListFilteredByPrice from '../components/ProductListFilteredByPrice';
 
 export function MainContent() {
-  const { categoryId } = useParams();
+  const { categoryId, filter } = useParams();
 
   return (
     <Container maxWidth="xl" sx={{ marginTop: "20px" }}>
       <Grid container>
-        <Grid size={2}>
+        <Grid item size={{xs:12,sm:12,md:2,lg:2}}>
           <CategoryList />
         </Grid>
-        
-        <Grid size={10}>
-                <ProductListBar />
 
-          {categoryId ? (
-            <ProductListFilteredByCategory  categoryId={categoryId} />
+        <Grid item size={{xs:12,sm:12,md:10,lg:10}}>
+          <ProductListBar />
+
+          {filter === "Artan" || filter === "Azalan" ? (
+            <ProductListFilteredByPrice key= {filter} filter={filter} />
+          ) : categoryId ? (
+            <ProductListFilteredByCategory categoryId={categoryId} />
           ) : (
             <ProductList />
           )}

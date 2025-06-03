@@ -8,6 +8,7 @@ import Login from './Login'
 import Profile from './Profile'
 import Product from '../components/Product'
 import ProductPage from './ProductPage'
+import ProductListFilteredByCategory from '../components/ProductListFilteredByCategory'
 
 
 
@@ -24,6 +25,7 @@ export function Home() {
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/product/:productId" element={<ProductPage />} />
+        <Route path="/product/filtered-by-price/:filter" element={<MainContent />} />
       </Routes>
     </>
   );
