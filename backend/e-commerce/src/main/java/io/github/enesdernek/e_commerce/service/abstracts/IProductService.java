@@ -2,9 +2,9 @@ package io.github.enesdernek.e_commerce.service.abstracts;
 
 import java.util.List;
 
+
 import io.github.enesdernek.e_commerce.dto.ProductDto;
 import io.github.enesdernek.e_commerce.dto.ProductDtoIU;
-import io.github.enesdernek.e_commerce.model.Product;
 
 public interface IProductService {
 	
@@ -27,5 +27,7 @@ public interface IProductService {
     List<ProductDto> getAllByPriceDESCPaged(int pageNo,int pageSize);
     
     List<ProductDto> getAllByCategoryIdPaged(Long categoryId,int pageNo,int pageSize);
+    
+    List<ProductDto> getAllDiscountedProducts(int pageNo,int pageSize);
     
 }

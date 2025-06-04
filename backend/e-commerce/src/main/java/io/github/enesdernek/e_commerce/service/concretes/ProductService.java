@@ -277,4 +277,25 @@ public class ProductService implements IProductService {
 		return productDtos;
 	}
 
+	@Override
+	public List<ProductDto> getAllDiscountedProducts(int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+		List<Product> productsDb = this.productRepository.getAllDiscountedProducts(pageable);
+		List<ProductDto> productDtos = new ArrayList();
+
+		for (Product product : productsDb) {
+			ProductDto productDto = new ProductDto();
+			BeanUtils.copyProperties(product, productDto);
+
+			Category category = product.getCategory();
+			CategoryDto categoryDto = new CategoryDto();
+			BeanUtils.copyProperties(category, categoryDto);
+			productDto.setCategoryDto(categoryDto);
+
+			productDtos.add(productDto);
+		}
+
+		return productDtos;
+	}
+
 }

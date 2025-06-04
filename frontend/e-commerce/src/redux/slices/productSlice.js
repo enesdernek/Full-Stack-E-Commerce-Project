@@ -6,7 +6,8 @@ const initialState = {
     product: null,
     categorizedProducts: [],
     loading: false,
-    filteredProducts: []
+    filteredProducts: [],
+    campaignProducts:[]
 }
 
 const BASIC_PATH = "http://localhost:8080/products"
@@ -52,6 +53,15 @@ export const filterProductsByPriceDESC = createAsyncThunk(
     'products/filterProductsByPriceDESC',
     async ({ pageNo }) => {
         const response = await axios.get(BASIC_PATH + `/sorted-by-price-desc?pageNo=${pageNo}&pageSize=12`)
+        return response.data
+    }
+
+)
+
+export const getAllCampaignProducts = createAsyncThunk(
+    'products/getAllCampaignProducts',
+    async ({ pageNo }) => {
+        const response = await axios.get(BASIC_PATH + `/get-all-discounted-products?pageNo=${pageNo}&pageSize=12`)
         return response.data
     }
 
@@ -139,7 +149,6 @@ export const productSlice = createSlice({
         })
         builder.addCase(filterProductsByPriceDESC.fulfilled, (state, action) => {
             const { pageNo } = action.meta.arg;
-            console.log(pageNo)
 
             if (pageNo === 1) {
                 state.filteredProducts = action.payload;
@@ -158,6 +167,27 @@ export const productSlice = createSlice({
         builder.addCase(filterProductsByPriceDESC.pending, (state) => {
             state.loading = true;
         })
+        builder.addCase(getAllCampaignProducts.fulfilled, (state,action) => {
+            const { pageNo } = action.meta.arg;
+
+            if (pageNo === 1) {
+                state.campaignProducts = action.payload;
+            } else {
+                const newProducts = action.payload.filter(newProduct =>
+                    !state.campaignProducts.some(existingProduct => existingProduct.productId === newProduct.productId)
+                );
+                state.campaignProducts = [...state.campaignProducts, ...newProducts];
+            }
+
+            state.loading = false;
+        })
+        builder.addCase(getAllCampaignProducts.pending, (state) => {
+            state.loading = true;
+        })
+        builder.addCase(getAllCampaignProducts.rejected, (state) => {
+            state.loading = false;
+        })
+
     }
 })
 

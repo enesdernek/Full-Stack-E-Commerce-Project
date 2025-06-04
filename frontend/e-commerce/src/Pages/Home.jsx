@@ -26,6 +26,8 @@ export function Home() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/product/:productId" element={<ProductPage />} />
         <Route path="/product/filtered-by-price/:filter" element={<MainContent />} />
+        <Route path="/product/favorited-products" element={<MainContent />} />
+        <Route path="/product/campaign-products" element={<MainContent />} />
       </Routes>
     </>
   );

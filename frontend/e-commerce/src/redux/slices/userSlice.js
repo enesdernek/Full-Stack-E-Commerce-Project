@@ -4,7 +4,8 @@ import axios from "axios"
 const initialState = {
     user: null,
     token: null,
-    loading: false
+    loading: false,
+    favoritedProducts:[]
 }
 
 const BASIC_PATH = "http://localhost:8080/users"
@@ -70,6 +71,22 @@ export const removeProductFromFavoritedListByProductId = createAsyncThunk(
     }
 );
 
+
+export const getFavoritedProducts = createAsyncThunk(
+    'user/getFavoritedProducts',
+    async ({ token,pageNo}) => {
+        const response = await axios.get(
+            `${BASIC_PATH}/favorited-products?pageNo=${pageNo}&pageSize=12`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+        return response.data
+    }
+);
+
 export const userSlice = createSlice({
     name: 'user',
     initialState,
@@ -102,6 +119,20 @@ export const userSlice = createSlice({
         })
         builder.addCase(getUser.fulfilled, (state, action) => {
             state.user = action.payload
+        })
+        builder.addCase(getFavoritedProducts.fulfilled, (state, action) => {
+            const { pageNo } = action.meta.arg;
+
+            if (pageNo === 1) {
+                state.favoritedProducts = action.payload;
+            } else {
+                const newProducts = action.payload.filter(newProduct =>
+                    !state.favoritedProducts.some(existingProduct => existingProduct.productId === newProduct.productId)
+                );
+                state.favoritedProducts = [...state.favoritedProducts, ...newProducts];
+            }
+
+            state.loading = false;
         })
 
     }

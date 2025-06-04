@@ -5,10 +5,11 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FeaturedPlayListIcon from '@mui/icons-material/FeaturedPlayList';
 import MiscellaneousServicesIcon from '@mui/icons-material/MiscellaneousServices';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { useNavigate } from 'react-router-dom';
 
 function Profile() {
     const user = useSelector((state) => state.user.user)
-
+    const navigate = useNavigate()
 
     return (
         <Container>
@@ -32,10 +33,10 @@ function Profile() {
                     }
                 </Typography>
             </Box>
-            <Box sx={{
+            <Box  sx={{
                 display: "flex", flexWrap: "wrap", direction: "row", marginTop: "30px", gap: "20px", alignContent: "center", justifyContent: "center"
             }}>
-                <Box  sx={{
+                <Box onClick={()=>navigate("/products/favorited-products")} sx={{
                     alignContent: "center", justifyContent: "center", textAlign: "center", backgroundColor: "#C97C7C", padding: "40px", borderRadius: "20px", width: "290px",
                     transition: "all 0.3s ease-in-out",
                     boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",

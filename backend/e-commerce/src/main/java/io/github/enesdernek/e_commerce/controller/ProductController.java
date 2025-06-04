@@ -73,4 +73,9 @@ public class ProductController {
 	public ResponseEntity<List<ProductDto>> getAllByCategoryIdPaged(@RequestParam Long categoryId,@RequestParam int pageNo,@RequestParam int pageSize){
 		return new ResponseEntity<List<ProductDto>>(this.productService.getAllByCategoryIdPaged(categoryId, pageNo, pageSize),HttpStatus.OK);
 	}
+	
+	@GetMapping("/get-all-discounted-products")
+	public ResponseEntity<List<ProductDto>> getAllDiscountedProducts(@RequestParam int pageNo,@RequestParam int pageSize) {
+		return new ResponseEntity<List<ProductDto>>(this.productService.getAllDiscountedProducts(pageNo, pageSize),HttpStatus.OK);
+	}
 }

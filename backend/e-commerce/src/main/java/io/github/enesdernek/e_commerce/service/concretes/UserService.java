@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -89,27 +91,6 @@ public class UserService implements IUserService {
 	        BeanUtils.copyProperties(user, userDto);
 	        String token = jwtService.generateToken(user);
 
-	        // Favorited Products
-	        List<Product> favoritedProducts = user.getFavoritedProducts();
-	        List<ProductDto> favoritedProductDtos = new ArrayList<>();
-
-	        if (favoritedProducts != null) {
-	            for (Product favoritedProduct : favoritedProducts) {
-	                ProductDto productDto = new ProductDto();
-	                BeanUtils.copyProperties(favoritedProduct, productDto);
-
-	                CategoryDto categoryDto = new CategoryDto();
-	                Category favoritedProductsCategory = favoritedProduct.getCategory();
-	                if (favoritedProductsCategory != null) {
-	                    BeanUtils.copyProperties(favoritedProductsCategory, categoryDto);
-	                    productDto.setCategoryDto(categoryDto);
-	                }
-
-	                favoritedProductDtos.add(productDto); // doğru listeye ekleme
-	            }
-	        }
-
-	        userDto.setFavoritedProductDtos(favoritedProductDtos);
 
 	        return new AuthResponse(userDto, token);
 
@@ -212,11 +193,13 @@ public class UserService implements IUserService {
 	}
 
 	@Override
-	public List<ProductDto> getFavoritedProductsListByUsername(String username) {
+	public List<ProductDto> getFavoritedProductsListByUsername(String username,int pageNo,int pageSize) {
 
 		User user = this.userRepository.findByUsername(username);
+		
+		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
 
-		List<Product> favoritedProducts = user.getFavoritedProducts();
+		List<Product> favoritedProducts = this.userRepository.getFavoritedProductsByUsername(username, pageable);
 
 		List<ProductDto> productDtos = new ArrayList<ProductDto>();
 

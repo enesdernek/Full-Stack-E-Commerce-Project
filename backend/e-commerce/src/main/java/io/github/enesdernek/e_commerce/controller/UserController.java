@@ -73,11 +73,11 @@ public class UserController {
 	}
 	
 	@GetMapping("/favorited-products")
-	public ResponseEntity<List<ProductDto>> getFavoritedProductsList(Authentication authentication){
+	public ResponseEntity<List<ProductDto>> getFavoritedProductsList(Authentication authentication,@RequestParam int pageNo,@RequestParam int pageSize){
 		
 		String username = authentication.getName();
 		
-		return new ResponseEntity<List<ProductDto>>(this.userService.getFavoritedProductsListByUsername(username),HttpStatus.OK);
+		return new ResponseEntity<List<ProductDto>>(this.userService.getFavoritedProductsListByUsername(username,pageNo,pageSize),HttpStatus.OK);
 	}
 	
 	@PutMapping("/rate-product")

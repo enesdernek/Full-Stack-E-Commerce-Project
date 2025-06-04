@@ -24,7 +24,7 @@ public interface IUserService {
     
     void deleteProductFromFavoriteListByUsernameAndProductId(String username, Long productId);
     
-    List<ProductDto>getFavoritedProductsListByUsername(String username);
+    List<ProductDto>getFavoritedProductsListByUsername(String username,int pageNo,int pageSize);
     
     ProductDto rateProductByUsernameAndProductId(String username, Long orderId, Long productId,double rating);
     

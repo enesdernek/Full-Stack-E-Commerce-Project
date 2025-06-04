@@ -6,8 +6,11 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import FavoriteIcon from '@mui/icons-material/Favorite';import Category from './Category';
 import CampaignIcon from '@mui/icons-material/Campaign';
+import { useNavigate } from 'react-router-dom';
 
 function CampaignList() {
+    const navigate = useNavigate()
+
     return (
 
         <List 
@@ -23,14 +26,14 @@ function CampaignList() {
             aria-labelledby="nested-list-subheader"
            
         >
-            <ListItemButton sx={{color:"orange"}} onClick={() => navigate("/products")} >
+            <ListItemButton sx={{color:"orange"}} onClick={() => navigate("/products/campaign-products")} >
                 <ListItemIcon>
                     <CampaignIcon sx={{color:"orange"}} />
                 </ListItemIcon>
                 <ListItemText primary="Kampanyalı Ürünler" />
             </ListItemButton>
 
-            <ListItemButton sx={{color:"red"}} onClick={() => navigate("/products")} >
+            <ListItemButton onClick={()=>navigate("/products/favorited-products")} sx={{color:"red"}} >
                 <ListItemIcon>
                     <FavoriteIcon sx={{color:"red"}} />
                 </ListItemIcon>
