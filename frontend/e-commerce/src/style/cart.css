@@ -1,0 +1,11 @@
+.cart-icon{
+    cursor: pointer;
+}
+
+.cart-icon-plus:hover{
+   color:greenyellow
+}
+
+.cart-icon-minus:hover{
+   color:brown
+}

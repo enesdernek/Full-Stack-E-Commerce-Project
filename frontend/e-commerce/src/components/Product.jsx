@@ -17,10 +17,18 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { Box, Chip } from '@mui/material';
 import { useNavigate } from "react-router-dom"
+import { useDispatch, useSelector } from 'react-redux';
+import { addProductToCartByProductId } from '../redux/slices/cartSlice';
 
 function Product({ product }) {
 
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const token = useSelector((state)=>state.user.token)
+
+  const addProductToCart=(productId)=>{
+        dispatch(addProductToCartByProductId({productId,token}))
+  }
 
   return (
     <Card
@@ -109,7 +117,7 @@ function Product({ product }) {
           />
         )}
 
-        <IconButton aria-label="share">
+        <IconButton onClick={()=>addProductToCart(product.productId)} aria-label="share">
           <AddShoppingCartIcon />
         </IconButton>
       </CardActions>

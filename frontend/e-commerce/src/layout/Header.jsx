@@ -1,4 +1,4 @@
-import React, { useSyncExternalStore } from 'react'
+import React, { useEffect, useSyncExternalStore } from 'react'
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -26,6 +26,8 @@ export function Header() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.user)
+  const cartItemQuantity = useSelector((state)=>state.cart.cartItemQuantity)
+
 
 
   const handleChange = (event) => {
@@ -87,8 +89,8 @@ export function Header() {
               sx={{ backgroundColor: "white", marginRight: "40px", marginY: "10px" }}
               id="outlined-basic" label="Ürün ara..." variant="outlined" />
 
-            <IconButton aria-label="cart">
-              <StyledBadge badgeContent={4} color="secondary">
+            <IconButton onClick={()=>navigate("/cart")} aria-label="cart">
+              <StyledBadge badgeContent={cartItemQuantity} color="secondary">
                 <ShoppingCartIcon sx={{ color: "white" }} />
               </StyledBadge>
             </IconButton>
