@@ -39,6 +39,61 @@ export const getAllCartItems = createAsyncThunk(
     }
 );
 
+export const removeItemFromCartByCartItemId = createAsyncThunk(
+    'cart/removeItemFromCartByCartItemId',
+    async ({ token, cartItemId }) => {
+        const response = await axios.put(
+            `${BASIC_PATH}/change-item-quantity?cartItemId=${cartItemId}&quantity=0`, {},
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+        return response.data
+    }
+);
+
+export const increaseItemQuantityByCartItemId = createAsyncThunk(
+    'cart/increaseItemQuantityByCartItemId',
+    async ({ token, cartItemId, quantity }) => {
+        console.log(token,cartItemId,quantity)
+        if (quantity >= 0 && quantity <= 10) {
+            const response = await axios.put(
+                `${BASIC_PATH}/change-item-quantity?cartItemId=${cartItemId}&quantity=${quantity + 1}`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+            return response.data;
+        }
+        return null;
+    }
+);
+
+export const decreaseItemQuantityByCartItemId = createAsyncThunk(
+    'cart/decreaseItemQuantityByCartItemId',
+    async ({ token, cartItemId, quantity }) => {
+        console.log(token,cartItemId,quantity)
+        if (quantity >= 0 && quantity <= 10) {
+            const response = await axios.put(
+                `${BASIC_PATH}/change-item-quantity?cartItemId=${cartItemId}&quantity=${quantity -1}`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+            return response.data;
+        }
+        return null;
+    }
+);
+
 export const cartSlice = createSlice({
     name: 'cart',
     initialState,
@@ -52,6 +107,18 @@ export const cartSlice = createSlice({
 
         })
         builder.addCase(getAllCartItems.fulfilled, (state, action) => {
+            state.cartItems = action.payload.cartItemDtos
+            state.cartItemQuantity = action.payload.cartItemDtos.length
+        })
+        builder.addCase(removeItemFromCartByCartItemId.fulfilled, (state, action) => {
+            state.cartItems = action.payload.cartItemDtos
+            state.cartItemQuantity = action.payload.cartItemDtos.length
+        })
+        builder.addCase(increaseItemQuantityByCartItemId.fulfilled, (state, action) => {
+            state.cartItems = action.payload.cartItemDtos
+            state.cartItemQuantity = action.payload.cartItemDtos.length
+        })
+        builder.addCase(decreaseItemQuantityByCartItemId.fulfilled, (state, action) => {
             state.cartItems = action.payload.cartItemDtos
             state.cartItemQuantity = action.payload.cartItemDtos.length
         })

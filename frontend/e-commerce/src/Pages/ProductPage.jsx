@@ -2,10 +2,12 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { getProductByProductId } from '../redux/slices/productSlice'
-import { Box, Container, Grid, IconButton, Rating, Stack, Typography } from '@mui/material'
+import { Box, Button, Container, Grid, IconButton, Rating, Stack, Typography } from '@mui/material'
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { addProductToFavoritedListByProductId, getUser, removeProductFromFavoritedListByProductId } from '../redux/slices/userSlice'
+import { addProductToCartByProductId } from '../redux/slices/cartSlice'
+import { openSnackbar } from '../redux/slices/appSlice'
 
 function ProductPage() {
 
@@ -21,13 +23,21 @@ function ProductPage() {
 
     const addProductToFavoritedList = async (productId) => {
         await dispatch(addProductToFavoritedListByProductId({ token, productId }));
-        await dispatch(getUser(token)); 
+        await dispatch(getUser(token));
+        dispatch(openSnackbar({ message: "Ürün favorilerim listesine eklendi.", severity: "success" }))
     };
 
     const removeProductFromFavoritedList = async (productId) => {
         await dispatch(removeProductFromFavoritedListByProductId({ token, productId }));
-        await dispatch(getUser(token)); 
+        await dispatch(getUser(token));
+        dispatch(openSnackbar({ message: "Ürün favorilerim listesinden silindi", severity: "warning" }))
+
     };
+
+    const addProductToCart = () => {
+        dispatch(addProductToCartByProductId({ productId, token }))
+        dispatch(openSnackbar({ message: "Ürün sepete eklendi!", severity: "success" }));
+    }
 
 
 
@@ -97,6 +107,7 @@ function ProductPage() {
                             </Box>
                             <Typography sx={{ marginLeft: "8px", fontSize: "20px" }} variant="span">{product.description}</Typography>
                         </Box>
+                        <Button onClick={() => addProductToCart()} sx={{ marginTop: "20px" }} variant='contained' color="warning">Sepete Ekle</Button>
                     </Grid>
                 </Grid>
             }

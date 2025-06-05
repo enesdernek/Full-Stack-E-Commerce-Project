@@ -1,11 +1,13 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAllCartItems } from '../redux/slices/cartSlice'
+import { decreaseItemQuantityByCartItemId, getAllCartItems, increaseItemQuantityByCartItemId, removeItemFromCartByCartItemId } from '../redux/slices/cartSlice'
 import { Box, Button, Container, Grid, IconButton, Typography } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import "../style/cart.css"
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { openSnackbar } from '../redux/slices/appSlice';
+
 
 function Cart() {
 
@@ -17,14 +19,25 @@ function Cart() {
         dispatch(getAllCartItems({ token }))
     }, [])
 
+    const removeItemFromCart = (cartItemId) => {
+        dispatch(removeItemFromCartByCartItemId({ token, cartItemId }))
+        dispatch(openSnackbar({message:"Ürün sepetten silindi.",severity:"warning"}))
+    }
 
+    const increaseItemQuantity = (cartItemId, quantity) => {
+        dispatch(increaseItemQuantityByCartItemId({ token, cartItemId, quantity }))
+    }
+
+    const decreaseItemQuantity = (cartItemId, quantity) => {
+        dispatch(decreaseItemQuantityByCartItemId({ token, cartItemId, quantity }))
+    }
 
     return (
         <Container sx={{ marginTop: "20px" }}>
             <Grid container >
                 <Grid sx={{ marginTop: "20px" }} item size={{ xs: 12, md: 12, lg: 12, sm: 12 }} >
                     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                        <Box sx={{display:"flex"}}>
+                        <Box sx={{ display: "flex" }}>
                             <ShoppingCartIcon sx={{ marginTop: "2px" }} />
                             <Typography sx={{ marginLeft: "5px" }} variant='h6'>Sepetteki Ürünler</Typography>
                         </Box>
@@ -55,11 +68,21 @@ function Cart() {
                                     <Box sx={{ display: "flex" }}>
                                         <Typography variant='h6' sx={{ marginLeft: "10px", marginTop: "5px" }}>Ürün miktarı: </Typography>
                                         <Typography variant='h6' sx={{ marginLeft: "10px", marginTop: "5px" }}>{cartItem.quantity}</Typography>
-                                        <AddCircleIcon className='cart-icon cart-icon-plus' sx={{ marginTop: "8px", marginLeft: "5px", color: "green" }} />
-                                        <RemoveCircleIcon className='cart-icon cart-icon-minus' sx={{ marginTop: "8px", marginLeft: "5px", marginRight: "10px", color: "red" }} />
-                                    </Box>
+                                        <AddCircleIcon onClick={() => increaseItemQuantity(cartItem.cartItemId, cartItem.quantity)} className='cart-icon cart-icon-plus' sx={{ marginTop: "8px", marginLeft: "5px", color: "green" }} />
+                                        <RemoveCircleIcon
+                                            onClick={() => cartItem.quantity > 1 && decreaseItemQuantity(cartItem.cartItemId, cartItem.quantity)}
+                                            className='cart-icon cart-icon-minus'
+                                            sx={{
+                                                marginTop: "8px",
+                                                marginLeft: "5px",
+                                                marginRight: "10px",
+                                                color: cartItem.quantity > 1 ? "red" : "gray",
+                                                cursor: cartItem.quantity > 1 ? "pointer" : "not-allowed",
+                                                opacity: cartItem.quantity > 1 ? 1 : 0.5
+                                            }}
+                                        />                                    </Box>
                                     <Box sx={{ marginTop: "25px" }}>
-                                        <Button variant='contained' color="error">Ürünü Sepetten Çıkar</Button>
+                                        <Button onClick={() => removeItemFromCart(cartItem.cartItemId)} variant='contained' color="error">Ürünü Sepetten Çıkar</Button>
                                     </Box>
                                 </Box>
 
@@ -73,7 +96,8 @@ function Cart() {
 
 
             </Grid>
-        </Container>
+
+        </Container >
     )
 }
 

@@ -19,15 +19,17 @@ import { Box, Chip } from '@mui/material';
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from 'react-redux';
 import { addProductToCartByProductId } from '../redux/slices/cartSlice';
+import { openSnackbar } from '../redux/slices/appSlice';
 
 function Product({ product }) {
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const token = useSelector((state)=>state.user.token)
+  const token = useSelector((state) => state.user.token)
 
-  const addProductToCart=(productId)=>{
-        dispatch(addProductToCartByProductId({productId,token}))
+  const addProductToCart = (productId) => {
+    dispatch(addProductToCartByProductId({ productId, token }))
+    dispatch(openSnackbar({ message: "Ürün sepete eklendi!", severity: "success" }));
   }
 
   return (
@@ -117,7 +119,7 @@ function Product({ product }) {
           />
         )}
 
-        <IconButton onClick={()=>addProductToCart(product.productId)} aria-label="share">
+        <IconButton onClick={() => addProductToCart(product.productId)} aria-label="share">
           <AddShoppingCartIcon />
         </IconButton>
       </CardActions>
