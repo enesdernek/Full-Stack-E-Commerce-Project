@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { logOut } from '../redux/slices/userSlice';
 import { styled } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
+import { getAllCartItems } from '../redux/slices/cartSlice';
 
 
 
@@ -28,7 +29,14 @@ export function Header() {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.user)
   const cartItemQuantity = useSelector((state) => state.cart.cartItemQuantity)
+  const token = useSelector((state)=>state.user.token)
 
+  useEffect(() => {
+    if (user) {
+      dispatch(getAllCartItems({ token }))
+    }
+
+  }, [])
 
 
   const handleChange = (event) => {

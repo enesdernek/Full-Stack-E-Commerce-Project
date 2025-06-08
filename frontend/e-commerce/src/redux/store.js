@@ -6,20 +6,22 @@ import categorySlice from './slices/categorySlice'
 import userSlice from './slices/userSlice'
 import appSlice from './slices/appSlice'
 import cartSlice from './slices/cartSlice'
+import orderSlice from './slices/orderSlice'
 
 const rootReducer = combineReducers({
     product: productSlice,
     category: categorySlice,
     user: userSlice,
     app: appSlice,
-    cart: cartSlice
+    cart: cartSlice,
+    order: orderSlice
 })
 
 const persistConfig = {
     key: "root",
     storage,
     version: 1,
-    blacklist: ["product", "app","cart"]
+    blacklist: ["product", "app", "cart","order","category"]
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
