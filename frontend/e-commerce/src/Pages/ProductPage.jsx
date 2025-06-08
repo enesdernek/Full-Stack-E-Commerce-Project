@@ -22,21 +22,34 @@ function ProductPage() {
     }, [productId])
 
     const addProductToFavoritedList = async (productId) => {
-        await dispatch(addProductToFavoritedListByProductId({ token, productId }));
-        await dispatch(getUser(token));
-        dispatch(openSnackbar({ message: "Ürün favorilerim listesine eklendi.", severity: "success" }))
+        if (user) {
+            await dispatch(addProductToFavoritedListByProductId({ token, productId }));
+            await dispatch(getUser(token));
+            dispatch(openSnackbar({ message: "Ürün favorilerim listesine eklendi.", severity: "success" }))
+        } else {
+            dispatch(openSnackbar({ message: "Ürünü favorilerim listesine eklemek için lütfen giriş yapın!", severity: "error" }))
+        }
+
     };
 
     const removeProductFromFavoritedList = async (productId) => {
-        await dispatch(removeProductFromFavoritedListByProductId({ token, productId }));
-        await dispatch(getUser(token));
-        dispatch(openSnackbar({ message: "Ürün favorilerim listesinden silindi", severity: "warning" }))
+        if (user) {
+            await dispatch(removeProductFromFavoritedListByProductId({ token, productId }));
+            await dispatch(getUser(token));
+            dispatch(openSnackbar({ message: "Ürün favorilerim listesinden silindi", severity: "warning" }))
+        }
+
 
     };
 
     const addProductToCart = () => {
-        dispatch(addProductToCartByProductId({ productId, token }))
-        dispatch(openSnackbar({ message: "Ürün sepete eklendi!", severity: "success" }));
+        if (user) {
+            dispatch(addProductToCartByProductId({ productId, token }))
+            dispatch(openSnackbar({ message: "Ürün sepete eklendi!", severity: "success" }));
+        } else {
+            dispatch(openSnackbar({ message: "Ürünü sepete eklemek için lütfen giriş yapın!", severity: "error" }))
+        }
+
     }
 
 
@@ -106,6 +119,9 @@ function ProductPage() {
 
                             </Box>
                             <Typography sx={{ marginLeft: "8px", fontSize: "20px" }} variant="span">{product.description}</Typography>
+                            <Box sx={{ marginTop: "18px" }}>
+                                <Typography variant="h5" sx={{ marginLeft: "8px", fontSize: "20px",color:"red" }}>{product.price} ₺</Typography>
+                            </Box>
                         </Box>
                         <Button onClick={() => addProductToCart()} sx={{ marginTop: "20px" }} variant='contained' color="warning">Sepete Ekle</Button>
                     </Grid>

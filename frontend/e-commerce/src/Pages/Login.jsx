@@ -39,7 +39,6 @@ function Login() {
                 username: values.username,
                 password: values.password
             }
-            console.log(body)
             dispatch(authenticate(body))
         })
     })

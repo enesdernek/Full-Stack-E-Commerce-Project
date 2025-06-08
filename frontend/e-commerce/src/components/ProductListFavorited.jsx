@@ -17,7 +17,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { useNavigate, useParams } from 'react-router-dom';
 import { clearFilteredProducts, filterProductsByPriceASC, filterProductsByPriceDESC } from '../redux/slices/productSlice';
-import { CircularProgress, Grid } from '@mui/material';
+import { Alert, CircularProgress, Grid } from '@mui/material';
 import Product from './Product';
 import { getFavoritedProducts } from '../redux/slices/userSlice';
 import { setProductListBarHeader } from '../redux/slices/appSlice';
@@ -30,26 +30,30 @@ function ProductListFavorited() {
     const loading = useSelector((state) => state.product.loading)
     const [hasMore, setHasMore] = useState(true);
     const navigate = useNavigate()
-    const token = useSelector((state)=>state.user.token)
-    const productListBarHeader = useSelector((state)=>state.app.productListBarHeader)
+    const token = useSelector((state) => state.user.token)
+    const productListBarHeader = useSelector((state) => state.app.productListBarHeader)
+    const user = useSelector((state) => state.user.user)
 
 
     useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                let newProducts = [];
+        if (user) {
+            const fetchProducts = async () => {
+                try {
+                    let newProducts = [];
 
-                    newProducts = await dispatch(getFavoritedProducts({ token,pageNo })).unwrap();
-                
-                if (newProducts.length < 12) {
-                    setHasMore(false);
+                    newProducts = await dispatch(getFavoritedProducts({ token, pageNo })).unwrap();
+
+                    if (newProducts.length < 12) {
+                        setHasMore(false);
+                    }
+                } catch (error) {
+                    console.error("Ürünler yüklenirken hata oluştu", error);
                 }
-            } catch (error) {
-                console.error("Ürünler yüklenirken hata oluştu", error);
-            }
-        };
+            };
 
-        fetchProducts();
+            fetchProducts();
+        }
+
     }, [pageNo, dispatch]);
 
 
@@ -78,37 +82,41 @@ function ProductListFavorited() {
 
 
     return (
-        <Grid sx={{ marginTop: "20px" }} container spacing={3} alignItems="stretch">
-            {favoritedProducts && favoritedProducts.map((favoritedProduct) => (
-                <Grid item size={{ xs: 12, sm: 6, md: 4, lg: 4 }} key={favoritedProduct.productId}>
-                    <Product product={favoritedProduct} />
-                </Grid>
-            ))}
+        <>
+            {
+                user ? <Grid sx={{ marginTop: "20px" }} container spacing={3} alignItems="stretch">
+                    {favoritedProducts && favoritedProducts.map((favoritedProduct) => (
+                        <Grid item size={{ xs: 12, sm: 6, md: 4, lg: 4 }} key={favoritedProduct.productId}>
+                            <Product product={favoritedProduct} />
+                        </Grid>
+                    ))}
 
-            {loading && (
-                <Grid item xs={12} style={{ marginTop: "20px" }}>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            width: '100%',
-                            minHeight: "100px",
-                        }}
-                    >
-                        <CircularProgress />
-                    </Box>
-                </Grid>
-            )}
+                    {loading && (
+                        <Grid item xs={12} style={{ marginTop: "20px" }}>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    width: '100%',
+                                    minHeight: "100px",
+                                }}
+                            >
+                                <CircularProgress />
+                            </Box>
+                        </Grid>
+                    )}
 
-            {!hasMore && (
-                <Grid item xs={12} style={{ textAlign: "center", marginTop: "20px" }}>
-                    <h4 style={{ marginLeft: "20px" }}>Tüm ürünler yüklendi.</h4>
-                </Grid>
-            )}
-        </Grid>
+                    {!hasMore && (
+                        <Grid item xs={12} style={{ textAlign: "center", marginTop: "20px" }}>
+                            <h4 style={{ marginLeft: "20px" }}>Tüm ürünler yüklendi.</h4>
+                        </Grid>
+                    )}
+                </Grid> : <Alert sx={{ marginTop: "20px" }} variant="filled" color="error">Favori listesi için giriş yapınız!</Alert>
+            }
 
 
+        </>
     )
 }
 

@@ -3,7 +3,8 @@ import axios from "axios"
 
 const initialState = {
     cartItems: [],
-    cartItemQuantity: 0
+    cartItemQuantity: 0,
+    cartTotalPrice: 0
 }
 
 const BASIC_PATH = "http://localhost:8080/cart"
@@ -57,7 +58,7 @@ export const removeItemFromCartByCartItemId = createAsyncThunk(
 export const increaseItemQuantityByCartItemId = createAsyncThunk(
     'cart/increaseItemQuantityByCartItemId',
     async ({ token, cartItemId, quantity }) => {
-        console.log(token,cartItemId,quantity)
+        console.log(token, cartItemId, quantity)
         if (quantity >= 0 && quantity <= 10) {
             const response = await axios.put(
                 `${BASIC_PATH}/change-item-quantity?cartItemId=${cartItemId}&quantity=${quantity + 1}`,
@@ -77,10 +78,10 @@ export const increaseItemQuantityByCartItemId = createAsyncThunk(
 export const decreaseItemQuantityByCartItemId = createAsyncThunk(
     'cart/decreaseItemQuantityByCartItemId',
     async ({ token, cartItemId, quantity }) => {
-        console.log(token,cartItemId,quantity)
+        console.log(token, cartItemId, quantity)
         if (quantity >= 0 && quantity <= 10) {
             const response = await axios.put(
-                `${BASIC_PATH}/change-item-quantity?cartItemId=${cartItemId}&quantity=${quantity -1}`,
+                `${BASIC_PATH}/change-item-quantity?cartItemId=${cartItemId}&quantity=${quantity - 1}`,
                 {},
                 {
                     headers: {
@@ -104,23 +105,37 @@ export const cartSlice = createSlice({
         builder.addCase(addProductToCartByProductId.fulfilled, (state, action) => {
             state.cartItems = action.payload.cartItemDtos
             state.cartItemQuantity = action.payload.cartItemDtos.length
-
+            state.cartTotalPrice = state.cartItems.reduce((total, item) => {
+                return total + (item.productDto.price * item.quantity);
+            }, 0);
         })
         builder.addCase(getAllCartItems.fulfilled, (state, action) => {
             state.cartItems = action.payload.cartItemDtos
             state.cartItemQuantity = action.payload.cartItemDtos.length
+            state.cartTotalPrice = state.cartItems.reduce((total, item) => {
+                return total + (item.productDto.price * item.quantity);
+            }, 0);
         })
         builder.addCase(removeItemFromCartByCartItemId.fulfilled, (state, action) => {
             state.cartItems = action.payload.cartItemDtos
             state.cartItemQuantity = action.payload.cartItemDtos.length
+            state.cartTotalPrice = state.cartItems.reduce((total, item) => {
+                return total + (item.productDto.price * item.quantity);
+            }, 0);
         })
         builder.addCase(increaseItemQuantityByCartItemId.fulfilled, (state, action) => {
             state.cartItems = action.payload.cartItemDtos
             state.cartItemQuantity = action.payload.cartItemDtos.length
+            state.cartTotalPrice = state.cartItems.reduce((total, item) => {
+                return total + (item.productDto.price * item.quantity);
+            }, 0);
         })
         builder.addCase(decreaseItemQuantityByCartItemId.fulfilled, (state, action) => {
             state.cartItems = action.payload.cartItemDtos
             state.cartItemQuantity = action.payload.cartItemDtos.length
+            state.cartTotalPrice = state.cartItems.reduce((total, item) => {
+                return total + (item.productDto.price * item.quantity);
+            }, 0);
         })
 
     }

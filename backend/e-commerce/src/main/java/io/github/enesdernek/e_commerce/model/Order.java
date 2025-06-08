@@ -48,6 +48,17 @@ public class Order {
 	@Column(name="delivery_adress")
 	private String deliveryAdress;
 	
+	@Column(name="is_delivered")
+	private boolean isDelivered;
+	
+	@Column(name="phone_number")
+	private String phoneNumber;
+	
+	@Column(name = "city")
+	private String city;
+
+	@Column(name = "district")
+	private String district;
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")

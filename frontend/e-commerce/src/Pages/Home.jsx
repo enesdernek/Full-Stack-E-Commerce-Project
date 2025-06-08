@@ -10,6 +10,7 @@ import Product from '../components/Product'
 import ProductPage from './ProductPage'
 import ProductListFilteredByCategory from '../components/ProductListFilteredByCategory'
 import Cart from './Cart'
+import Order from './Order'
 
 
 
@@ -30,6 +31,7 @@ export function Home() {
         <Route path="/product/favorited-products" element={<MainContent />} />
         <Route path="/product/campaign-products" element={<MainContent />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/order" element={<Order />} />
       </Routes>
     </>
   );

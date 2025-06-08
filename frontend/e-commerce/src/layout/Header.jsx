@@ -16,6 +16,7 @@ import Badge from '@mui/material/Badge';
 import { useDispatch, useSelector } from "react-redux"
 import { logOut } from '../redux/slices/userSlice';
 import { styled } from '@mui/material/styles';
+import SearchIcon from '@mui/icons-material/Search';
 
 
 
@@ -26,7 +27,7 @@ export function Header() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.user)
-  const cartItemQuantity = useSelector((state)=>state.cart.cartItemQuantity)
+  const cartItemQuantity = useSelector((state) => state.cart.cartItemQuantity)
 
 
 
@@ -80,20 +81,45 @@ export function Header() {
               <StorefrontIcon />
 
             </IconButton>
-
             <Typography onClick={() => navigate("/products")} variant="h6" component="div" sx={{ flexGrow: 1 }}>
               <span id="header-text">E-Commerce</span>
             </Typography>
+            <Box sx={{ display: "flex", alignItems: "center", marginRight: "80px" }}>
+              <TextField
+                sx={{
+                  backgroundColor: "white",
+                  height: "50px",
+                  "& .MuiInputBase-root": {
+                    height: "50px",
+                    padding: 0
+                  }
+                }}
+                id="filled-basic"
+                label="Ürün ara..."
+                variant="filled"
+              />
+              <Button
+                sx={{
+                  marginLeft: "2px",
+                  height: "50px",
+                  backgroundColor: "white",
+                  color: "black",
+                  minWidth: "50px",
+                  padding: 0
+                }}
+                variant="contained"
+              >
+                <SearchIcon />
+              </Button>
+            </Box>
+            {
+              user && <IconButton onClick={() => navigate("/cart")} aria-label="cart">
+                <StyledBadge badgeContent={cartItemQuantity} color="secondary">
+                  <ShoppingCartIcon sx={{ color: "white" }} />
+                </StyledBadge>
+              </IconButton>
+            }
 
-            <TextField
-              sx={{ backgroundColor: "white", marginRight: "40px", marginY: "10px" }}
-              id="outlined-basic" label="Ürün ara..." variant="outlined" />
-
-            <IconButton onClick={()=>navigate("/cart")} aria-label="cart">
-              <StyledBadge badgeContent={cartItemQuantity} color="secondary">
-                <ShoppingCartIcon sx={{ color: "white" }} />
-              </StyledBadge>
-            </IconButton>
 
             {
               user && user ?

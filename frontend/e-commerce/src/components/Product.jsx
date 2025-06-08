@@ -26,10 +26,16 @@ function Product({ product }) {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const token = useSelector((state) => state.user.token)
+  const user = useSelector((state) => state.user.user)
 
   const addProductToCart = (productId) => {
-    dispatch(addProductToCartByProductId({ productId, token }))
-    dispatch(openSnackbar({ message: "Ürün sepete eklendi!", severity: "success" }));
+    if (user) {
+      dispatch(addProductToCartByProductId({ productId, token }))
+      dispatch(openSnackbar({ message: "Ürün sepete eklendi!", severity: "success" }));
+    }else{
+      dispatch(openSnackbar({message:"Ürünü sepete eklemek için lütfen giriş yapın!",severity:"error"}))
+    }
+
   }
 
   return (
