@@ -1,48 +1,71 @@
-#Full Stack E-Commerce Application
+# 🛒 Full Stack E-Ticaret Uygulaması
 
-## Description
+Bu proje, Java 21 (Spring Boot), React, MySQL ve JWT kullanılarak geliştirilmiş tam işlevli bir e-ticaret uygulamasıdır. Kullanıcılar ürünleri filtreleyebilir, arayabilir, kategorilere göre inceleyebilir, sepet yönetimi yapabilir ve sipariş verebilir.
 
--This project is a full stack e-commerce application that allows customers to;
-   -Add Products to cart
-   -Delete Products from cart
-   -Buying products and paying simulation
-   -Add Products to favorites
-   -Rate products
+## 🚀 Özellikler
 
--Products have their own categories and customers can sort them by some properties and filter them.
+### 👤 Kullanıcı İşlemleri
+- JWT tabanlı güvenli giriş ve kimlik doğrulama
+- Kayıt olma ve giriş yapma
+- Beğenilen ürünler listesine ekleme ve silme
+- Sipariş geçmişi görüntüleme
 
-##Tools
-   -Frontend:
-     -React
-     -React Redux
-     -Material UI
-   -Backend:
-     -Java Spring Boot
-   -Database:
-      -MySQL
+### 🛍️ Ürün ve Kategori Yönetimi
+- Ürünleri kategoriye göre listeleme
+- Ürün arama ve filtreleme
+- Kampanyalı ürünleri ayrı olarak listeleme
 
-##Requirements
-    -Backend:
-     -Java 21
-     -MySQL
+### 🛒 Sepet İşlemleri
+- Ürünü sepete ekleme
+- Sepetten ürün çıkarma
+- Sepetteki ürün adedini artırma/azaltma
+- Sipariş oluşturma
 
-##How to start and use backend(Spring Boot) application:
+## 🛠️ Kullanılan Teknolojiler
 
-    -Import files into any IDE that supports Java
-    -Create database named "ecommerce_db" in localhost:3306 
-    -update application properties:
-       -spring.datasource.username="Your database username"
-       -spring.datasource.password="Your database password"
+### Backend
+- Java 21
+- Spring Boot
+- Spring Security (JWT)
+- Spring Data JPA
+- MySQL
+- Lombok
+- Swagger/OpenAPI
 
-    -Run ECommerceApplication.java file.
+### Frontend
+- React
+- React Redux Toolkit
+- Axios
+- React Router
+- Redux persist
+- Material UI
 
-    -You can use the requests by going to this adress in your browser:"localhost:8080/swagger-ui/index.html"
-    -You can use the product and category services without authentication. If you want to use other requests, you have to authenticate.
-     for authentication, use the request "/users/register" and create a user. After that use the request "/users/authenticate" and create
-     a token. Copy the token and click the Authorize button and paste the token, click Authorize button. And now you can use all requests
-     that allowed for your user.
+### Diğer
+- MySQL veritabanı
 
-     
+## 🔧 Kurulum
 
+### 1. Backend
 
+```bash
+# Projeyi klonla
+git clone https://github.com/enesdernek/Full-Stack-E-Commerce-Project.git
+cd backend/ecommerce
 
+# application.properties veya application.yml dosyasında MySQL ayarlarını yap
+# Örnek:
+spring.datasource.url=jdbc:mysql://localhost:3306/eticaret
+spring.datasource.username=root
+spring.datasource.password=parolan
+
+# Maven ile derle ve çalıştır
+./mvnw spring-boot:run
+
+# Frontend dizinine gir
+cd frontend/ecommerce
+
+# Gerekli paketleri yükle
+npm install
+
+# React uygulamasını başlat
+npm start
