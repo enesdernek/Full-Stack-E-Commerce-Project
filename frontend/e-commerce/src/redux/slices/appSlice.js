@@ -5,7 +5,7 @@ const initialState = {
   productListBarHeader: "Tüm Ürünler",
   snackbarOpen: false,
   snackbarMessage: "",
-  snackbarSeverity:""
+  snackbarSeverity:"",
 }
 
 

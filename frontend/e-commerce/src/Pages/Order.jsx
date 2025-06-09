@@ -146,7 +146,7 @@ function Order() {
                         label="Tam Adres"
                         multiline
                         rows={4}
-                        defaultValue="Default Value"
+                        defaultValue=""
                     />
 
                     <FormControlLabel control={<Checkbox />} label="Sipariş sözleşmesini kabul ediyorum." />

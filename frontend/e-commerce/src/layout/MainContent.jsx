@@ -18,15 +18,17 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { useDispatch, useSelector } from 'react-redux';
 import { closeSnackbar } from '../redux/slices/appSlice';
+import ProductListFilteredBySearch from '../components/ProductListFilteredBySearch';
 
 
 export function MainContent() {
-  
-  const { categoryId, filter } = useParams();
+
+  const { categoryId, keyword, filter } = useParams();
   const location = useLocation()
   const isFavoritedPageFavorited = location.pathname.includes("/products/favorited-products");
   const isFavoritedPageCampaign = location.pathname.includes("/products/campaign-products");
-  
+
+
   return (
     <Container maxWidth="xl" sx={{ marginTop: "20px" }}>
       <Grid container>
@@ -42,6 +44,8 @@ export function MainContent() {
             <ProductListFavorited />
           ) : isFavoritedPageCampaign ? (
             <ProductListCampaign />
+          ) : keyword ? (
+            <ProductListFilteredBySearch keyword={keyword} />
           ) : filter === "Artan" || filter === "Azalan" ? (
             <ProductListFilteredByPrice key={filter} filter={filter} />
           ) : categoryId ? (
@@ -51,7 +55,7 @@ export function MainContent() {
           )}
         </Grid>
       </Grid>
-     
+
     </Container>
   );
 }

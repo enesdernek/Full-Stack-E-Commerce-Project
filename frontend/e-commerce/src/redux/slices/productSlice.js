@@ -7,7 +7,8 @@ const initialState = {
     categorizedProducts: [],
     loading: false,
     filteredProducts: [],
-    campaignProducts:[]
+    campaignProducts:[],
+    searchedProducts:[]
 }
 
 const BASIC_PATH = "http://localhost:8080/products"
@@ -62,6 +63,15 @@ export const getAllCampaignProducts = createAsyncThunk(
     'products/getAllCampaignProducts',
     async ({ pageNo }) => {
         const response = await axios.get(BASIC_PATH + `/get-all-discounted-products?pageNo=${pageNo}&pageSize=12`)
+        return response.data
+    }
+
+)
+
+export const searchProductsByKeyword = createAsyncThunk(
+    'products/searchProductsByKeyword',
+    async ({ keyword,pageNo }) => {
+        const response = await axios.get(BASIC_PATH + `/search?searchInput=${keyword}&pageNo=${pageNo}&pageSize=12`)
         return response.data
     }
 
@@ -185,6 +195,28 @@ export const productSlice = createSlice({
             state.loading = true;
         })
         builder.addCase(getAllCampaignProducts.rejected, (state) => {
+            state.loading = false;
+        })
+
+
+        builder.addCase(searchProductsByKeyword.fulfilled, (state,action) => {
+            const { pageNo } = action.meta.arg;
+
+            if (pageNo === 1) {
+                state.searchedProducts = action.payload;
+            } else {
+                const newProducts = action.payload.filter(newProduct =>
+                    !state.searchedProducts.some(existingProduct => existingProduct.productId === newProduct.productId)
+                );
+                state.searchedProducts = [...state.searchedProducts, ...newProducts];
+            }
+
+            state.loading = false;
+        })
+        builder.addCase(searchProductsByKeyword.pending, (state) => {
+            state.loading = true;
+        })
+        builder.addCase(searchProductsByKeyword.rejected, (state) => {
             state.loading = false;
         })
 

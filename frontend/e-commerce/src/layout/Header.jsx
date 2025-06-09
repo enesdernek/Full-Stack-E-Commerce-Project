@@ -1,4 +1,4 @@
-import React, { useEffect, useSyncExternalStore } from 'react'
+import React, { useEffect, useState, useSyncExternalStore } from 'react'
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -29,7 +29,8 @@ export function Header() {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.user)
   const cartItemQuantity = useSelector((state) => state.cart.cartItemQuantity)
-  const token = useSelector((state)=>state.user.token)
+  const token = useSelector((state) => state.user.token)
+  const [keyword, setKeyword] = useState("")
 
   useEffect(() => {
     if (user) {
@@ -38,6 +39,13 @@ export function Header() {
 
   }, [])
 
+  useEffect(()=>{
+       setKeyword("")
+  },[navigate])
+
+  const handleInputChange = (e) => {
+       setKeyword(e.target.value)
+  }
 
   const handleChange = (event) => {
     setAuth(event.target.checked);
@@ -70,6 +78,7 @@ export function Header() {
       padding: '0 4px',
     },
   }));
+
 
   return (
 
@@ -105,8 +114,11 @@ export function Header() {
                 id="filled-basic"
                 label="Ürün ara..."
                 variant="filled"
+                value={keyword}
+                onChange={(e)=>handleInputChange(e)}
               />
               <Button
+              onClick={()=>navigate("/product/keyword/"+keyword)}
                 sx={{
                   marginLeft: "2px",
                   height: "50px",

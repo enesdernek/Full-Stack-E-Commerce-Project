@@ -29,9 +29,10 @@ export function Home() {
         <Route path="/product/:productId" element={<ProductPage />} />
         <Route path="/product/filtered-by-price/:filter" element={<MainContent />} />
         <Route path="/product/favorited-products" element={<MainContent />} />
-        <Route path="/product/campaign-products" element={<MainContent />} />
-        <Route path="/cart" element={<Cart />} />
+        <Route path="/product/keyword/:keyword" element={<MainContent />} />
         <Route path="/order" element={<Order />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/order" element={<Order />} />       
       </Routes>
     </>
   );
