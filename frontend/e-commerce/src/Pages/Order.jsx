@@ -5,7 +5,7 @@ import * as yup from "yup"
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
-import { Alert, Box, Button, Checkbox, Container, Divider, FormControl, FormControlLabel, Grid, IconButton, Input, InputAdornment, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
+import { Alert, Box, Button, Checkbox, Container, Divider, FormControl, FormControlLabel, FormHelperText, Grid, IconButton, Input, InputAdornment, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 
 
@@ -24,8 +24,11 @@ const validationSchema = yup.object({
         .required('district is required'),
     deliveryAdress: yup.string("Enter your username")
         .required("delivery adress is required")
-        .min(8, "Username has to contain 3 characters at least.")
-        .max(256, "Username can't has more than 18 characters.")
+        .min(8, "Sipariş adresi en az 8 karakterden oluşmalı.")
+        .max(256, "Sipariş adresi 256 karakterden fazla olamaz."),
+    term: yup
+        .boolean()
+        .oneOf([true], "Sipariş sözleşmesini kabul etmelisiniz!")
 });
 
 function Order() {
@@ -74,7 +77,8 @@ function Order() {
             phoneNumber: "",
             city: "",
             district: "",
-            deliveryAdress: ""
+            deliveryAdress: "",
+            term:false
         },
         validationSchema: validationSchema,
         onSubmit: ((values) => {
@@ -83,11 +87,12 @@ function Order() {
                 city: values.city,
                 district: values.district,
                 deliveryAdress: values.deliveryAdress,
-                totalPrice: 0
+                totalPrice: cartTotalPrice
             }
-            dispatch(authenticate(body))
+            console.log(body)
         })
     })
+
 
     return (
         <Container>
@@ -95,63 +100,109 @@ function Order() {
                 <Grid size={{ xs: 12, md: 6, lg: 6, sm: 6 }} sx={{ marginTop: "20px" }}  >
                     <Typography variant='h5'>Sipariş Oluştur</Typography>
 
-                    <TextField
-                        sx={{
-                            width: "100%",
-                            marginTop: "20px"
-                        }}
-                        id="input-with-icon-textfield"
-                        label="Telefon Numarası"
-                        slotProps={{
-                            input: {
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <LocalPhoneIcon />
-                                    </InputAdornment>
-                                ),
-                            },
-                        }}
-                        variant="standard"
-                    />
+                    <form onSubmit={formik.handleSubmit}>
+                        <TextField
+                            error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
+                            sx={{
+                                width: "100%",
+                                marginTop: "20px"
+                            }}
+                            id="input-with-icon-textfield"
+                            label="Telefon Numarası"
+                            name="phoneNumber"
+                            type='number'
+                            value={formik.values.phoneNumber}
+                            onChange={formik.handleChange}
+                            slotProps={{
+                                input: {
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <LocalPhoneIcon />
+                                        </InputAdornment>
+                                    ),
+                                },
+                            }}
+                            variant="standard"
+                        />
+                        {formik.touched.phoneNumber && formik.errors.phoneNumber && (
+                            <FormHelperText error>{formik.errors.phoneNumber}</FormHelperText>
+                        )}
 
-                    <FormControl fullWidth sx={{ marginTop: "20px" }}>
-                        <InputLabel>Şehir</InputLabel>
-                        <Select value={city} label="Şehir" onChange={handleChangeCity}>
-                            {cityDatas.map((city) => (
-                                <MenuItem key={city.id} value={city.name}>
-                                    {city.name}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                        <FormControl fullWidth sx={{ marginTop: "20px" }}>
+                            <InputLabel>Şehir</InputLabel>
+                            <Select
+                                error={formik.touched.city && Boolean(formik.errors.city)}
+                                name="city" value={formik.values.city} label="Şehir" onChange={(e) => {
+                                    formik.handleChange(e);
+                                    handleChangeCity(e);
+                                }}>
+                                {cityDatas.map((city) => (
+                                    <MenuItem key={city.id} value={city.name}>
+                                        {city.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        {formik.touched.city && formik.errors.city && (
+                            <FormHelperText error>{formik.errors.city}</FormHelperText>
+                        )}
 
-                    <FormControl fullWidth sx={{ marginTop: "20px" }}>
-                        <InputLabel>İlçe</InputLabel>
-                        <Select value={district} label="İlçe" onChange={handleChangeDistrict} disabled={!city} >
-                            {filteredDistricts.map((district) => (
-                                <MenuItem key={district.id} value={district.name}>
-                                    {district.name}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                        <FormControl fullWidth sx={{ marginTop: "20px" }}>
+                            <InputLabel>İlçe</InputLabel>
+                            <Select
+                                error={formik.touched.district && Boolean(formik.errors.district)}
+                                name="district" value={formik.values.district} label="İlçe" onChange={(e) => {
+                                    formik.handleChange(e);
+                                    handleChangeDistrict(e);
+                                }} disabled={!city} >
+                                {filteredDistricts.map((district) => (
+                                    <MenuItem key={district.id} value={district.name}>
+                                        {district.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        {formik.touched.district && formik.errors.district && (
+                            <FormHelperText error>{formik.errors.district}</FormHelperText>
+                        )}
 
 
-                    <TextField
-                        sx={{
-                            width: "100%",
-                            marginTop: "20px"
-                        }}
-                        id="outlined-multiline-static"
-                        label="Tam Adres"
-                        multiline
-                        rows={4}
-                        defaultValue=""
-                    />
+                        <TextField
+                            sx={{
+                                width: "100%",
+                                marginTop: "20px"
+                            }}
+                            error={formik.touched.deliveryAdress && Boolean(formik.errors.deliveryAdress)}
+                            value={formik.values.deliveryAdress}
+                            onChange={formik.handleChange}
+                            id="outlined-multiline-static"
+                            name="deliveryAdress"
+                            label="Tam Adres"
+                            multiline
+                            rows={4}
+                            defaultValue=""
+                        />
+                        {formik.touched.deliveryAdress && formik.errors.deliveryAdress && (
+                            <FormHelperText error>{formik.errors.deliveryAdress}</FormHelperText>
+                        )}
 
-                    <FormControlLabel control={<Checkbox />} label="Sipariş sözleşmesini kabul ediyorum." />
-                    <Typography variant="h5">Toplam: {cartTotalPrice} ₺</Typography>
-                    <Button variant='contained' color="success">Sipariş Oluştur</Button>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    name="term"
+                                    checked={formik.values.term}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                />
+                            }
+                            label="Sipariş sözleşmesini kabul ediyorum."
+                        />
+                        {formik.touched.term && formik.errors.term && (
+                            <FormHelperText error>{formik.errors.term}</FormHelperText>
+                        )}
+                        <Typography variant="h5">Toplam: {cartTotalPrice} ₺</Typography>
+                        <Button type='submit' variant='contained' color="success">Sipariş Oluştur</Button>
+                    </form>
                 </Grid>
 
 
