@@ -11,6 +11,7 @@ import ProductPage from './ProductPage'
 import ProductListFilteredByCategory from '../components/ProductListFilteredByCategory'
 import Cart from './Cart'
 import Order from './Order'
+import OrderPage from './OrderPage'
 
 
 
@@ -32,7 +33,8 @@ export function Home() {
         <Route path="/product/keyword/:keyword" element={<MainContent />} />
         <Route path="/order" element={<Order />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/order" element={<Order />} />       
+        <Route path="/order" element={<Order />} />
+        <Route path="/order/:orderId" element={<OrderPage />} />         
       </Routes>
     </>
   );

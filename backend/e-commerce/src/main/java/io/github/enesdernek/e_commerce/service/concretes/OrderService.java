@@ -1,6 +1,7 @@
 package io.github.enesdernek.e_commerce.service.concretes;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -105,6 +106,8 @@ public class OrderService implements IOrderService {
 
 	    order.setTotalPrice(totalPrice);
 	    order.setOrderItems(orderItems);
+	    order.setDate(LocalDateTime.now());
+
 	    Order savedOrder = this.orderRepository.save(order);
 
 	    cart.getCartItems().clear();

@@ -12,17 +12,23 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderDto {
-	
+
 	private Long orderId;
-	
-	private List<OrderItemDto>orderItemDtos;
-	
+
+	private List<OrderItemDto> orderItemDtos;
+
 	private LocalDateTime date;
-	
+
 	private BigDecimal totalPrice;
-	
+
 	private String deliveryAdress;
-	
+
 	private UserDto userDto;
+
+	private String phoneNumber;
+
+	private String city;
+
+	private String district;
 
 }

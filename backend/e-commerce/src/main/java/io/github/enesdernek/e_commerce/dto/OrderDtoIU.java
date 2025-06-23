@@ -13,6 +13,11 @@ public class OrderDtoIU {
 	private LocalDateTime date;
 	
 	private String deliveryAdress;
-		
 	
+	private String phoneNumber;
+	
+	private String city;
+	
+	private String district;
+		
 }

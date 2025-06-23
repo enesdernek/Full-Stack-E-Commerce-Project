@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { Alert, Box, Button, Checkbox, Container, Divider, FormControl, FormControlLabel, FormHelperText, Grid, IconButton, Input, InputAdornment, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import { createOrder } from '../redux/slices/orderSlice';
 
 
 
@@ -78,7 +79,7 @@ function Order() {
             city: "",
             district: "",
             deliveryAdress: "",
-            term:false
+            term: false
         },
         validationSchema: validationSchema,
         onSubmit: ((values) => {
@@ -89,7 +90,10 @@ function Order() {
                 deliveryAdress: values.deliveryAdress,
                 totalPrice: cartTotalPrice
             }
-            console.log(body)
+            dispatch(createOrder({ token, body })).then(result => {
+                navigate("/order/"+result.payload.orderId)
+            });
+
         })
     })
 
@@ -180,7 +184,6 @@ function Order() {
                             label="Tam Adres"
                             multiline
                             rows={4}
-                            defaultValue=""
                         />
                         {formik.touched.deliveryAdress && formik.errors.deliveryAdress && (
                             <FormHelperText error>{formik.errors.deliveryAdress}</FormHelperText>
