@@ -3,7 +3,7 @@ import axios from "axios"
 
 const initialState = {
     orderList: [],
-    order:null,
+    order: null,
     loading: false
 }
 
@@ -26,7 +26,7 @@ export const createOrder = createAsyncThunk(
 
 export const getByOrderId = createAsyncThunk(
     'order/getByOrderId',
-    async ({ token,orderId }) => {
+    async ({ token, orderId }) => {
         const response = await axios.get(
             `${BASIC_PATH}/${orderId}`,
             {
@@ -43,7 +43,7 @@ export const getAllOrders = createAsyncThunk(
     'order/getAllOrders',
     async ({ token }) => {
         const response = await axios.get(
-            `${BASIC_PATH}`, {},
+            `${BASIC_PATH}`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -67,7 +67,7 @@ export const orderSlice = createSlice({
         builder.addCase(getByOrderId.fulfilled, (state, action) => {
             state.order = action.payload
         })
-       
+
     }
 
 })

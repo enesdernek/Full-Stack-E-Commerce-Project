@@ -79,6 +79,11 @@ export function Header() {
     },
   }));
 
+  const navigateToOrderListPage=()=>{
+    navigate("/orders")
+    handleClose()
+  }
+
 
   return (
 
@@ -171,7 +176,7 @@ export function Header() {
                     onClose={handleClose}
                   >
                     <MenuItem onClick={() => navigateToProfile()}>Profil</MenuItem>
-                    <MenuItem onClick={handleClose} >Siparişlerim</MenuItem>
+                    <MenuItem onClick={navigateToOrderListPage} >Siparişlerim</MenuItem>
                     <MenuItem onClick={() => logOutFunc()}>Çıkış Yap</MenuItem>
                   </Menu>
                 </div>

@@ -11,7 +11,8 @@ function OrderPage() {
   const navigate = useNavigate()
   const order = useSelector((state) => state.order.order)
   const token = useSelector((state) => state.user.token)
-  const orderItems = useSelector((state) => state.order.order.orderItemDtos)
+  const orderItems = useSelector((state) => state.order.order?.orderItemDtos || []);
+  
 
   useEffect(() => {
     dispatch(getByOrderId({ token, orderId }))
@@ -19,11 +20,9 @@ function OrderPage() {
 
   return (
     <Container>
-      <Grid size={{ xs: 12, md: 12, sx: 12 }}>
-        <Alert sx={{ marginTop: "20px" }} severity="success">Sipariş başarı ile oluşturuldu.</Alert>
-      </Grid>
+ 
       <Grid>
-        <Typography sx={{ marginTop: "20px" }} variant='h5'>Sipariş Detayları</Typography>
+        <Typography sx={{ marginTop: "20px" }} variant='h4'>Sipariş Detayları</Typography>
         {
           order ?
             <Box>

@@ -51,7 +51,9 @@ function Profile() {
                         Beğendiğim Ürünler
                     </Typography>
                 </Box>
-                <Box sx={{
+                <Box
+                onClick={()=>navigate("/orders")}
+                sx={{
                     alignContent: "center", justifyContent: "center", textAlign: "center", backgroundColor: "blue", padding: "40px", borderRadius: "20px", width: "290px",
                     transition: "all 0.3s ease-in-out",
                     boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
