@@ -43,6 +43,20 @@ Bu proje, Java 21 (Spring Boot), React, MySQL ve JWT kullanılarak geliştirilmi
 ### Diğer
 - MySQL veritabanı
 
+##Proje Görselleri
+![Kayıt Sayfası](images/signin.png)
+![Giriş Sayfası](images/login.png)
+![Ürünler Sayfası](images/home.png)
+![Kategorize Edilmiş Ürünler](images/elektronik.png)
+![Fiyatı Azalan Olarak Filtrelenmiş Ürünler](images/azalan.png)
+![Kelime ile Filtrelenmiş Ürünler](images/kelimefiltre.png)
+![Beğenilmiş Ürünler](images/begendigim.png)
+![Sepet Sayfası](images/cart.png)
+![Sipariş Oluşturma Sayfası](images/siparis.png)
+![Sipariş Detay Sayfası](images/siparisdetay.png)
+![Kullanıcının Tüm Siparişleri](images/tumsiparisler.png)
+![Kullanıcı Profil Sayfası](images/kullanici.png)
+
 ## 🔧 Kurulum
 
 ### 1. Backend
@@ -70,19 +84,7 @@ npm install
 # React uygulamasını başlat
 npm start
 
-##Proje Görselleri
-![Kayıt Sayfası](images/signin.png)
-![Giriş Sayfası](images/login.png)
-![Ürünler Sayfası](images/home.png)
-![Kategorize Edilmiş Ürünler](images/elektronik.png)
-![Fiyatı Azalan Olarak Filtrelenmiş Ürünler](images/azalan.png)
-![Kelime ile Filtrelenmiş Ürünler](images/kelimefiltre.png)
-![Beğenilmiş Ürünler](images/begendigim.png)
-![Sepet Sayfası](images/cart.png)
-![Sipariş Oluşturma Sayfası](images/siparis.png)
-![Sipariş Detay Sayfası](images/siparisdetay.png)
-![Kullanıcının Tüm Siparişleri](images/siparisdetay.png)
-![Kullanıcı Profil Sayfası](images/kullanici.png)
+
 
 
 
